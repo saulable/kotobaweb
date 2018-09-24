@@ -13,7 +13,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "./node_modules/eslint/bin/eslint.js ."
+    "lint": "./node_modules/eslint/bin/eslint.js . --ext .js,.jsx",
+    "lintfix": "./node_modules/eslint/bin/eslint.js . --ext .js,.jsx --fix"
   },
   "proxy": "http://localhost:3000",
   "devDependencies": {

@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import Nav from './../nav/nav.jsx';
+import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Nav from '../nav/nav';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <div>
-          <Nav />
-          <div className='container-fluid'>
-            <Switch>
-              <Route render={function () {
-                return <p>Not Found</p>
-              }} />
-            </Switch>
-          </div>
-        </div>
-      </BrowserRouter>
-    );
-  }
+function renderNotFound() {
+  return <p>Not Found</p>;
 }
 
-export default App;
+function render() {
+  return (
+    <BrowserRouter>
+      <div>
+        <Nav />
+        <div className="container-fluid">
+          <Switch>
+            <Route render={renderNotFound} />
+          </Switch>
+        </div>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default render;
