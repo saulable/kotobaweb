@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Nav from '../nav/nav';
+import About from '../about/about';
 import './App.css';
 
 function renderNotFound() {
@@ -14,6 +15,7 @@ function render() {
         <Nav />
         <div className="container-fluid">
           <Switch>
+            <Route exact path="/about" component={About} />
             <Route render={renderNotFound} />
           </Switch>
         </div>
