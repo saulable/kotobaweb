@@ -6,7 +6,7 @@ function render() {
     <div className="container-fluid">
       <div className="row">
         <div className="col-lg-8 contentboxPadding">
-          <div className="contentbox">
+          <div className="card textcontentbox">
             <p>
               KotobaWeb is an extension of work I&#39;ve done for
               <a href="http://kotoba.k33.we.bs/"> my Discord Bot</a>
@@ -18,7 +18,7 @@ function render() {
           </div>
         </div>
         <div className="col-lg-4 contentboxPadding">
-          <div className="contentbox">
+          <div className="card formcontentbox">
             <form method="post" action="contact">
               <div className="form-group">
                 <label htmlFor="emailaddress">Email</label>
