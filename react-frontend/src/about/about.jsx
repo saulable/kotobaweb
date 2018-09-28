@@ -20,6 +20,8 @@ function render() {
         <div className="col-lg-4 contentboxPadding">
           <div className="card formcontentbox">
             <form method="post" action="contact">
+              <h1 class="card-title">Contact</h1>
+              <h6 class="card-subtitle mb-2 text-muted">Drop us a line</h6>
               <div className="form-group">
                 <label htmlFor="emailaddress">Email</label>
                 <input type="email" className="form-control" id="emailaddress" placeholder="Your email address" />
@@ -28,7 +30,7 @@ function render() {
                 <label htmlFor="message" id="messageLabel">Message</label>
                 <textarea className="form-control" id="message" placeholder="Your message" rows="5" />
               </div>
-              <button type="submit" className="btn btn-primary">Submit</button>
+              <button type="submit" className="btn btn-primary active">Submit</button>
             </form>
           </div>
         </div>
