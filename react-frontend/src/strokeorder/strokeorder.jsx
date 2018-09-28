@@ -42,7 +42,11 @@ function createKanjiCards(kanjis) {
       <div className="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-6 pl-0 pr-4 pb-4" key={index}>
         <div className="card">
           <div className="card-body">
-            <h5 className="card-title">{kanji}</h5>
+            <h5 className="card-title">
+              <a className="card-title" href={`https://jisho.org/search/${encodeURIComponent(kanji)}%23kanji`} target="_blank">
+                {kanji}
+              </a>
+            </h5>
             { uri ?
               (<img class="card-img-bottom" src={uri} alt="kanji stroke order" />) :
               (<p>Unknown kanji</p>)

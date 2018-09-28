@@ -15,8 +15,8 @@ function render() {
               Kanji Game
             </span>
             <div className="dropdown-menu">
-              <NavLink exact activeClassName="active" className="dropdown-item" to="/game/start">Start</NavLink>
-              <NavLink exact activeClassName="active" className="dropdown-item" to="/game/join">Join</NavLink>
+              <NavLink exact activeClassName="active" className="dropdown-item" to="/kanjigame/create">Create</NavLink>
+              <NavLink exact activeClassName="active" className="dropdown-item" to="/kanjigame/join">Join</NavLink>
             </div>
           </li>
           <li className="nav-item">

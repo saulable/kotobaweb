@@ -16,8 +16,8 @@ function render() {
             searching, furigana rendering, and more.
           </p>
           <p>
-            If you have feedback or ideas, please let me know using the contact form
-            on the right. The code for the website is&nbsp;
+            If you have feedback or ideas, please let me know using the contact form.
+            The code for the website is&nbsp;
             <a href="https://github.com/mistval/kotobaweb">
               open source
             </a>
