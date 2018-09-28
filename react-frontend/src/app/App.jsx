@@ -13,7 +13,7 @@ function render() {
     <BrowserRouter>
       <div>
         <Nav />
-        <div className="container-fluid">
+        <div className="container-fluid p-5">
           <Switch>
             <Route exact path="/about" component={About} />
             <Route render={renderNotFound} />
