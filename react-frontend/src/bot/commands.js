@@ -67,7 +67,7 @@ const commands = [
     'sh',
     'Start a game of shiritori in this channel.',
     [
-      new Example('shiritori', '', ''),
+      new Example('shiritori', '', 'kshiritori.png'),
     ],
   ),
   new Command(
@@ -125,7 +125,7 @@ const commands = [
     'th',
     'Search the Weblio thesaurus a word. (Results are in Japanese)',
     [
-      new Example('thesaurus', '瞬間', ''),
+      new Example('thesaurus', '瞬間', 'kthesaurus.png'),
     ],
   ),
   new Command(
@@ -133,7 +133,7 @@ const commands = [
     'p',
     'Look up the pronunciation of a word',
     [
-      new Example('pronounce', '瞬間', ''),
+      new Example('pronounce', '瞬間', 'kpronounce.png'),
     ],
   ),
   new Command(
@@ -151,7 +151,7 @@ const commands = [
     '',
     'Change my settings, including prefix. Most settings can be changed on a user level. Others can only be changed on a server or channel level.',
     [
-      new Example('settings', '', ''),
+      new Example('settings', '', 'ksettings.png'),
     ],
   ),
   new Command(
