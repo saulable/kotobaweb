@@ -22,7 +22,7 @@ function createCommandsJsx() {
             {command.shortCommand
               && (
                 <h6 className="card-subtitle mb-2 text-muted">
-                  Short:&nbsp;
+                  short:&nbsp;
                   {command.shortCommand}
                 </h6>
               )
