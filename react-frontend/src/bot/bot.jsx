@@ -1,8 +1,8 @@
 import React from 'react';
 import './bot.css';
-import './../main.css';
-import Avatar from './../img/kotoba_avatar.png';
-import commands from './commands.js';
+import '../main.css';
+import Avatar from '../img/kotoba_avatar.png';
+import commands from './commands';
 
 function createExamplesJsx(examples) {
   return examples.filter(example => example.imageName).map((example) => {
@@ -19,8 +19,13 @@ function createCommandsJsx() {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">{command.primaryCommand}</h5>
-            {command.shortCommand &&
-              <h6 className="card-subtitle mb-2 text-muted">Short: {command.shortCommand}</h6>
+            {command.shortCommand
+              && (
+                <h6 className="card-subtitle mb-2 text-muted">
+                  Short:&nbsp;
+                  {command.shortCommand}
+                </h6>
+              )
             }
             <p className="card-text">{command.description}</p>
             {createExamplesJsx(command.examples)}
@@ -45,8 +50,9 @@ function Header() {
       <div className="row p-5">
         <img alt="bot avatar" id="avatar" src={Avatar} />
         <div id="avatar-right-content">
-          <div class="pl-3">
-            Kotoba Discord Bot<br />
+          <div className="pl-3">
+            Kotoba Discord Bot
+            <br />
             <a href="https://discordbots.org/bot/251239170058616833"><img src="https://discordbots.org/api/widget/status/251239170058616833.svg" alt="Discord Bots" /></a>
             &nbsp;
             <a href="https://discordbots.org/bot/251239170058616833"><img src="https://discordbots.org/api/widget/servers/251239170058616833.svg" alt="Discord Bots" /></a>

@@ -1,12 +1,10 @@
-const path = require('path');
-
 const COMMAND_PREFIX = 'k!';
 
 class Example {
   constructor(exampleAlias, exampleSuffix, imageName) {
     this.exampleText = `${COMMAND_PREFIX}${exampleAlias}${exampleSuffix ? ' ' : ''}${exampleSuffix}`;
     this.imageName = imageName;
-    this.key = `${exampleAlias}${exampleSuffix}${imageName}`
+    this.key = `${exampleAlias}${exampleSuffix}${imageName}`;
   }
 }
 
