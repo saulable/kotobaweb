@@ -15,6 +15,28 @@ function render() {
             Japanese-related functions including dictionary searching, kanji
             searching, furigana rendering, and more.
           </p>
+          <p>
+            If you have feedback or ideas, please let me know using the contact form
+            on the right. The code for the website is&nbsp;
+            <a href="https://github.com/mistval/kotobaweb">
+              open source
+            </a>
+            &nbsp;and contributions are welcome.
+          </p>
+          <p>
+            This site is built using <a href="https://reactjs.org/">React.js</a>,&nbsp;
+            <a href="https://fezvrasta.github.io/bootstrap-material-design/">Bootstrap Material Design</a>,
+            and <a href="http://expressjs.com/">Express.js</a>.
+          </p>
+          <p>
+            The game data comes from various sources including <a href="https://jisho.org/">Jisho</a>,&nbsp;
+            <a href="http://www.edrdg.org/wiki/index.php/KANJIDIC_Project">KANJIDIC</a>, and Patrick Roos's&nbsp;
+            <a href="https://github.com/darkgray1981/kanjiquizbot">kanjiquizbot</a>.
+          </p>
+          <p>
+            The kanji stroke order graphics were generated using <a href="https://github.com/maurimo/kanimaji">Kanimaji</a>&nbsp;
+            and <a href="https://kanjivg.tagaini.net/">KanjiVG</a>.
+          </p>
         </div>
         <div className="col-lg-4 card">
           <div className="card-body">
