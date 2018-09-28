@@ -20,7 +20,6 @@ function render() {
           <div className="card-body">
             <form method="post" action="contact">
               <h1 className="card-title">Contact</h1>
-              <h6 className="card-subtitle mb-2 text-muted">Drop us a line</h6>
               <div className="form-group">
                 <label className="bmd-label-static" id="emailLabel" htmlFor="emailaddress">Email</label>
                 <input type="email" className="form-control" id="emailaddress" placeholder="Your email address" />

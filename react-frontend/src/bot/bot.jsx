@@ -1,5 +1,4 @@
-import React, { PureComponent } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import './bot.css';
 import '../main.css';
 import Avatar from '../img/kotoba_avatar.png';
