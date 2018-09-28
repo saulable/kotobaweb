@@ -1,0 +1,10 @@
+#avatar {
+  width: 132px;
+  height: 132px;
+}
+
+#avatar-right-content {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 40px;
+}

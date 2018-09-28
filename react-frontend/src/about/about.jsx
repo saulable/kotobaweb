@@ -1,5 +1,6 @@
 import React from 'react';
 import '../main.css';
+import { NavLink } from 'react-router-dom';
 
 function render() {
   return (
@@ -7,8 +8,8 @@ function render() {
       <div className="row">
         <div className="col-lg-8">
           <p>
-            KotobaWeb is an extension of work I&#39;ve done for
-            <a href="http://kotoba.k33.we.bs/"> my Discord Bot</a>
+            KotobaWeb is an extension of work I&#39;ve done for&nbsp;
+            <NavLink exact activeClassName="active" to="/bot">my Discord Bot</NavLink>
             . In addition to the features here on the website, the bot has SRS,
             saving/loading, leaderboards, more question categories, plus other
             Japanese-related functions including dictionary searching, kanji
