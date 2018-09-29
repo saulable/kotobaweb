@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './create.css';
 import decks from './decks.js';
+import usernames from './usernames.js';
+
+const defaultUsername = usernames[Math.floor(Math.random() * usernames.length)];
 
 class DeckSelector extends Component {
   constructor(props) {
@@ -36,12 +39,12 @@ class DeckSelector extends Component {
             </a>
           )}
         </div>
-        <div class="pt-1">
+        <div className="pt-1">
           { Object.keys(this.state.selectedDecks)[0] &&
             <hr />
           }
           {decks.filter(deckInformation => this.state.selectedDecks[deckInformation.shortName]).map(deckInformation =>
-            <button type="button" class="btn btn-outline-primary mr-2" onClick={() => this.toggle(deckInformation.shortName)}>
+            <button type="button" className="btn btn-outline-primary mr-2" onClick={() => this.toggle(deckInformation.shortName)}>
               {deckInformation.longName} <span aria-hidden="true">&times;</span>
             </button>
           )}
@@ -71,8 +74,15 @@ function render() {
               <h5 className="card-title">Configuration</h5>
             </div>
             <div className="card-body">
-              <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" className="btn btn-primary">Go somewhere</a>
+              <label className="bmd-label-static" htmlFor="answerTimeLimit">Answer time limit (seconds)</label>
+              <input className="form-control" id="answerTimeLimit" defaultValue="30" />
+              <label className="bmd-label-static mt-3" htmlFor="answerLeeway">Answer leeway (milliseconds)</label>
+              <input className="form-control" id="answerLeeway" defaultValue="0" />
+              <div className="checkbox mt-4">
+                <label>
+                  <input type="checkbox" /> Private game
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -82,8 +92,9 @@ function render() {
               <h5 className="card-title">User</h5>
             </div>
             <div className="card-body">
-              <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" className="btn btn-primary">Go somewhere</a>
+              <label className="bmd-label-static" htmlFor="username">Username</label>
+              <input className="form-control" id="username" defaultValue={defaultUsername} />
+              <button className="btn btn-raised btn-primary mt-3">Start game</button>
             </div>
           </div>
         </div>
