@@ -10,7 +10,7 @@ class DeckSelector extends Component {
     };
   }
 
-  onClick = shortName => {
+  toggle = shortName => {
     this.setState(function(previousState) {
       if (previousState.selectedDecks[shortName]) {
         delete previousState.selectedDecks[shortName];
@@ -24,16 +24,28 @@ class DeckSelector extends Component {
 
   render() {
     return (
-      <div className="list-group">
-        {decks.map(deckInformation =>
-          <a
-            href="#"
-            className={`list-group-item list-group-item-action${this.state.selectedDecks[deckInformation.shortName] ? ' active' : ''}`}
-            onClick={() => this.onClick(deckInformation.shortName)}
-            key={deckInformation.shortName}>
-              {deckInformation.longName}
-          </a>
-        )}
+      <div>
+        <div className="list-group" id="deckList">
+          {decks.map(deckInformation =>
+            <a
+              href="#"
+              className={`list-group-item list-group-item-action${this.state.selectedDecks[deckInformation.shortName] ? ' active' : ''}`}
+              onClick={() => this.toggle(deckInformation.shortName)}
+              key={deckInformation.shortName}>
+                {deckInformation.longName}
+            </a>
+          )}
+        </div>
+        <div class="pt-1">
+          { Object.keys(this.state.selectedDecks)[0] &&
+            <hr />
+          }
+          {decks.filter(deckInformation => this.state.selectedDecks[deckInformation.shortName]).map(deckInformation =>
+            <button type="button" class="btn btn-outline-primary mr-2" onClick={() => this.toggle(deckInformation.shortName)}>
+              {deckInformation.longName} <span aria-hidden="true">&times;</span>
+            </button>
+          )}
+        </div>
       </div>
     );
   }
@@ -46,7 +58,7 @@ function render() {
         <div className="col-lg-4">
           <div className="card">
             <div className="card-block-title">
-              <h5 className="card-title">Categories</h5>
+              <h5 className="card-title">Select Categories</h5>
             </div>
             <div className="card-body">
               <DeckSelector />
