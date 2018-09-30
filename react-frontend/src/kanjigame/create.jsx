@@ -3,7 +3,7 @@ import './create.css';
 import decks from './decks.js';
 import usernames from './usernames.js';
 import ListPicker from '../controls/list_picker';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, withFormik } from 'formik';
 import * as Yup from 'yup';
 
 const listPickerItems = decks.map(deckInformation => ({
@@ -26,11 +26,11 @@ const formSchema = Yup.object().shape({
     .min(1, 'Username must be between 1 and 20 characters long')
     .max(20, 'Username must be between 1 and 20 characters long')
     .required('Username is required'),
+  decks: Yup.array()
+    .min(1, 'You must choose at least one category'),
 });
 
 function RenderForm({ formikArgs }) {
-  console.log(`Formik args ${JSON.stringify(formikArgs)}`);
-
   return (
     <Form>
       <div className="row">
@@ -40,9 +40,19 @@ function RenderForm({ formikArgs }) {
               <h5 className="card-title">Select Categories</h5>
             </div>
             <div className="card-body">
-              <ListPicker maxHeight="350px" items={listPickerItems} selectionUpdated={() => {}} />
+              <ListPicker
+                name="decks"
+                maxHeight="350px"
+                items={listPickerItems}
+                selectedItems={formikArgs.values.decks}
+                selectionUpdated={newValue => { formikArgs.setFieldValue('decks', newValue); }} />
             </div>
           </div>
+          { formikArgs.errors.decks &&
+            <div className="alert alert-warning mt-3" role="alert">
+              {formikArgs.errors.decks}
+            </div>
+          }
         </div>
         <div className="col-lg-4">
           <div className="card">
@@ -50,10 +60,14 @@ function RenderForm({ formikArgs }) {
               <h5 className="card-title">Configuration</h5>
             </div>
             <div className="card-body">
+              <div>
                 <label className="bmd-label-static" htmlFor="answerTimeLimit">Answer time limit (seconds)</label>
                 <Field className="form-control" name="answerTimeLimit" />
+              </div>
+              <div>
                 <label className="bmd-label-static mt-3" htmlFor="answerLeeway">Answer leeway (milliseconds)</label>
                 <Field className="form-control" name="answerLeeway" />
+              </div>
               <div className="checkbox mt-4">
                 <label>
                   <input type="checkbox" /> Private game
@@ -61,6 +75,8 @@ function RenderForm({ formikArgs }) {
               </div>
             </div>
           </div>
+          <ErrorMessage className="alert alert-warning mt-3" name="answerTimeLimit" component="div" />
+          <ErrorMessage className="alert alert-warning mt-3" name="answerLeeway" component="div" />
         </div>
         <div className="col-lg-4">
           <div className="card">
@@ -77,11 +93,9 @@ function RenderForm({ formikArgs }) {
               >
                 Start game
               </button>
-              <ErrorMessage className="alert alert-warning mt-3" name="answerTimeLimit" component="div" />
-              <ErrorMessage className="alert alert-warning mt-3" name="answerLeeway" component="div" />
-              <ErrorMessage className="alert alert-warning mt-3" name="username" component="div" />
             </div>
           </div>
+          <ErrorMessage className="alert alert-warning mt-3" name="username" component="div" />
         </div>
       </div>
     </Form>
@@ -92,7 +106,7 @@ function render() {
   return (
     <div className="container-fluid p-5">
       <Formik
-        initialValues={{ answerTimeLimit: 30, answerLeeway: 0, username: defaultUsername }}
+        initialValues={{ answerTimeLimit: 30, answerLeeway: 0, username: defaultUsername, decks: [] }}
         validationSchema={formSchema}
       >
       {(formikArgs) => (

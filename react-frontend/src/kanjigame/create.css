@@ -7,3 +7,9 @@
 .card-block-title h5 {
   margin: 0px;
 }
+
+.errored {
+  border-style: solid;
+  border-width: 3px;
+  border-color: red
+}
