@@ -23,8 +23,8 @@ class ListPicker extends Component {
 
   render() {
     const listPickerBoxStyles = {
-      'overflow-y': 'scroll',
-      'max-height': this.props.maxHeight,
+      overflowY: 'scroll',
+      maxHeight: this.props.maxHeight,
     };
 
     return (
@@ -45,7 +45,7 @@ class ListPicker extends Component {
             <hr />
           }
           {this.props.items.filter(item => this.state.selectedKeys[item.key]).map(item =>
-            <button type="button" className="btn btn-outline-primary mr-2" onClick={() => this.toggle(item.key)}>
+            <button type="button" className="btn btn-outline-primary mr-2" onClick={() => this.toggle(item.key)} key={item.key}>
               {item.value} <span aria-hidden="true">&times;</span>
             </button>
           )}
