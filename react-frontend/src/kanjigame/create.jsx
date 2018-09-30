@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './create.css';
 import decks from './decks.js';
 import usernames from './usernames.js';
 import ListPicker from '../controls/list_picker';
-import { Formik, Form, Field, ErrorMessage, withFormik } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import socketIO from 'socket.io-client';
+
+const SOCKET_SERVER_URI = 'http://localhost:3020';
 
 const listPickerItems = decks.map(deckInformation => ({
   key: deckInformation.shortName,
@@ -102,19 +105,49 @@ function RenderForm({ formikArgs }) {
   );
 }
 
-function render() {
-  return (
-    <div className="container-fluid p-5">
-      <Formik
-        initialValues={{ answerTimeLimit: 30, answerLeeway: 0, username: defaultUsername, decks: [] }}
-        validationSchema={formSchema}
-      >
-      {(formikArgs) => (
-        <RenderForm formikArgs={formikArgs} />
-      )}
-      </Formik>
-    </div>
-  );
+function submitCreate(values, socket) {
+  console.log(values);
+  fetch('http://localhost:3000/users').then(response => {
+    response.json().then(t => console.log('REEEEEEE ' + JSON.stringify(t)));
+  });
+
+  const gameConfig = {
+    decks: Object.keys(values.decks),
+    answerTimeLimitInMs: values.answerTimeLimit * 1000,
+    answerForgivenessWindow: values.answerLeeway,
+    private: true, // TODO
+  };
+
+  socket.on('room created', function(response) {
+    console.log('Response: ' + response);
+  });
+
+  socket.emit('create', gameConfig);
 }
 
-export default render;
+class Create extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      socket: socketIO(SOCKET_SERVER_URI),
+    };
+  }
+
+  render() {
+    return (
+      <div className="container-fluid p-5">
+        <Formik
+          initialValues={{ answerTimeLimit: 30, answerLeeway: 0, username: defaultUsername, decks: [] }}
+          validationSchema={formSchema}
+          onSubmit={(values) => submitCreate(values, this.state.socket)}
+        >
+        {(formikArgs) => (
+          <RenderForm formikArgs={formikArgs} />
+        )}
+        </Formik>
+      </div>
+    );
+  }
+}
+
+export default Create;
