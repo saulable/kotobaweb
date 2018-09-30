@@ -7,8 +7,3 @@
 .card-block-title h5 {
   margin: 0px;
 }
-
-#deckList {
-  max-height: 500px;
-  overflow-y: scroll;
-}

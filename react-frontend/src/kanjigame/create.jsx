@@ -2,57 +2,14 @@ import React, { Component } from 'react';
 import './create.css';
 import decks from './decks.js';
 import usernames from './usernames.js';
+import ListPicker from '../controls/list_picker'
+
+const listPickerItems = decks.map(deckInformation => ({
+  key: deckInformation.shortName,
+  value: deckInformation.longName,
+}));
 
 const defaultUsername = usernames[Math.floor(Math.random() * usernames.length)];
-
-class DeckSelector extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedDecks: {},
-    };
-  }
-
-  toggle = shortName => {
-    this.setState(function(previousState) {
-      if (previousState.selectedDecks[shortName]) {
-        delete previousState.selectedDecks[shortName];
-      } else {
-        previousState.selectedDecks[shortName] = true;
-      }
-
-      return previousState;
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="list-group" id="deckList">
-          {decks.map(deckInformation =>
-            <a
-              href="#"
-              className={`list-group-item list-group-item-action${this.state.selectedDecks[deckInformation.shortName] ? ' active' : ''}`}
-              onClick={() => this.toggle(deckInformation.shortName)}
-              key={deckInformation.shortName}>
-                {deckInformation.longName}
-            </a>
-          )}
-        </div>
-        <div className="pt-1">
-          { Object.keys(this.state.selectedDecks)[0] &&
-            <hr />
-          }
-          {decks.filter(deckInformation => this.state.selectedDecks[deckInformation.shortName]).map(deckInformation =>
-            <button type="button" className="btn btn-outline-primary mr-2" onClick={() => this.toggle(deckInformation.shortName)}>
-              {deckInformation.longName} <span aria-hidden="true">&times;</span>
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
-}
 
 function render() {
   return (
@@ -64,7 +21,7 @@ function render() {
               <h5 className="card-title">Select Categories</h5>
             </div>
             <div className="card-body">
-              <DeckSelector />
+              <ListPicker maxHeight="500px" items={listPickerItems} selectionUpdated={() => {}} />
             </div>
           </div>
         </div>
