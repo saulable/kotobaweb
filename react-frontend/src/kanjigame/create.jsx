@@ -75,8 +75,8 @@ function RenderForm({ formikArgs }) {
                 <Field className="form-control" name="answerLeeway" />
               </div>
               <div className="checkbox mt-4">
-                <label className="label-darker">
-                  <Field type="checkbox" name="privateGame" /> Private game
+                <label>
+                  <Field type="checkbox" name="privateGame" /> <span className="label-darker">Private game</span>
                 </label>
               </div>
             </div>
