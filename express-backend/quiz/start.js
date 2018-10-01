@@ -1,8 +1,8 @@
-const quizManager = require('./../common/quiz/manager.js');
-const Session = require('./../common/quiz/session.js');
-const DeckCollection = require('./../common/quiz/deck_collection.js');
-const DeckLoader = require('./../common/quiz/deck_loader.js');
-const normalGameMode = require('./../common/quiz/normal_mode.js');
+const quizManager = require('./common/manager.js');
+const Session = require('./common/session.js');
+const DeckCollection = require('./common/deck_collection.js');
+const DeckLoader = require('./common/deck_loader.js');
+const normalGameMode = require('./common/normal_mode.js');
 const socketIo = require('socket.io');
 const errors = require('./../../src_common/socket_errors.js');
 const events = require('./../../src_common/socket_events.js');
@@ -56,11 +56,21 @@ class Room {
     });
 
     this.emitEventFromSender(socket, { username });
+
+    socket.on(events.Client.SKIP, () => {
+      quizManager.skip(this.roomID);
+    });
+
+    socket.on(events.Client.CHAT, msg => {
+      this.emitEventFromSender(socket, events.Server.CHAT, { msg, username });
+      quizManager.processUserInput(this.roomID, socket.id, username, msg);
+    });
   }
 
   removePlayer(socket) {
     const username = this.userInfoForUserID[socket.id].username;
     this.emitEventFromSender(socket, events.Server.PLAYER_LEFT, { username });
+    socket.leave(this.roomID);
     delete this.userInfoForUserID[socket.id];
 
     if (!Object.keys(this.userInfoForUserID)[0]) {
@@ -72,6 +82,7 @@ class Room {
     this.emitEventToAll(reason, { unansweredQuestions });
 
     Object.keys(this.userInfoForUserID).forEach(userID => {
+      this.sockets.connected[userID].leave(this.roomID);
       delete roomIDForUserID[userID];
     });
 
@@ -250,14 +261,14 @@ function registerCreate(sockets, socket) {
       roomIDForUserID[socket.id] = room.roomID;
       return socket.emit(
         events.Server.CREATED_GAME,
-        createSuccessResponse({ roomID });
+        createSuccessResponse({ roomID }),
       );
     });
   });
 }
 
 function registerDisconnect(socket) {
-  socket.on('disconnect' () => {
+  socket.on('disconnect', () => {
     const roomID = roomIDForUserID[socket.id];
     if (roomID) {
       const room = roomForRoomID[roomID];
@@ -266,7 +277,7 @@ function registerDisconnect(socket) {
   });
 }
 
-function startListen(httpServer) {
+function startListen(sockets) {
   const socketNamespace = sockets.of(namespace);
 
   socketNamespace.on('connection', socket => {
@@ -277,5 +288,4 @@ function startListen(httpServer) {
 
 module.exports = {
   startListen,
-  broadcast,
 };

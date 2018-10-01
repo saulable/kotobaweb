@@ -15,7 +15,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-const sockets = socketIo(httpServer);
+const sockets = socketIO(http);
 kanjiGame.startListen(sockets);
 
 module.exports = app;

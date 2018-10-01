@@ -4,7 +4,6 @@ const path = require('path');
 const renderText = reload('./../render_text.js').render;
 const convertToHiragana = reload('./../util/convert_to_hiragana.js');
 const shuffleArray = reload('./../util/shuffle_array.js');
-const forvoAudioCache = reload('./../forvo_cache.js');
 
 const URI_MAX_LENGTH = 2048;
 const JLPT_AUDIO_FILE_DIRECTORY = path.resolve(__dirname, '..', '..', '..', 'resources', 'quiz_audio');
@@ -128,15 +127,6 @@ function createJlptAudioFileQuestion(card) {
   return Promise.resolve(question);
 }
 
-async function createForvoAudioFileQuestion(card) {
-  const question = createQuestionCommon(card);
-  const word = card.question;
-  const uris = await forvoAudioCache.getPronunciationClipsForWord(word);
-  question.bodyAsAudioUri = uris[Math.floor(Math.random() * uris.length)];
-
-  return question;
-}
-
 function createTextQuestionWithHint(card, quizState) {
   if (!quizState.textQuestionWithHintStrategyState) {
     quizState.textQuestionWithHintStrategyState = {};
@@ -189,7 +179,6 @@ module.exports.CreateQuestionStrategy = {
   TEXT_WITH_HINT: createTextQuestionWithHint,
   TEXT: createTextQuestion,
   JLPT_AUDIO_FILE: createJlptAudioFileQuestion,
-  FORVO_AUDIO_FILE: createForvoAudioFileQuestion,
 };
 
 /* SCORING STRATEGIES */
