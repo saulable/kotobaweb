@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import socketIO from 'socket.io-client';
 import socketEvents from '../common/socket_events.js';
 import socketNamespaces from '../common/socket_namespaces.js';
+import Slider from '../controls/slider.jsx';
 import './../main.css';
 
 const SOCKET_SERVER_URI = `http://localhost:3002${socketNamespaces.KANJI_GAME}`;
@@ -35,6 +36,14 @@ const formSchema = Yup.object().shape({
   decks: Yup.array()
     .min(1, 'You must choose at least one category'),
 });
+
+function formatSeconds(unformatted) {
+  return `${unformatted} seconds`;
+}
+
+function formatMilliseconds(unformatted) {
+  return `${unformatted} ms`;
+}
 
 function RenderForm({ formikArgs }) {
   return (
@@ -68,13 +77,27 @@ function RenderForm({ formikArgs }) {
             <div className="card-body">
               <div className="form-group">
                 <label className="bmd-label-floating label-darker" htmlFor="answerTimeLimit">Answer time limit (seconds)</label>
-                <Field className="form-control" name="answerTimeLimit" />
+                <Slider
+                  name="answerTimeLimit"
+                  min="5"
+                  max="100"
+                  defaultValue="30"
+                  format={formatSeconds}
+                  onChange={ newValue => formikArgs.setFieldValue('answerTimeLimit', newValue) }
+                />
               </div>
-              <div className="form-group">
+              <div className="form-group mt-5">
                 <label className="bmd-label-floating label-darker" htmlFor="answerLeeway">Answer leeway (milliseconds)</label>
-                <Field className="form-control" name="answerLeeway" />
+                <Slider
+                  name="answerLeeway"
+                  min="0"
+                  max="10000"
+                  defaultValue="0"
+                  format={formatMilliseconds}
+                  onChange={ newValue => formikArgs.setFieldValue('answerLeeway', newValue) }
+                />
               </div>
-              <div className="checkbox mt-4">
+              <div className="checkbox mt-5">
                 <label>
                   <Field type="checkbox" name="privateGame" /> <span className="label-darker">Private game</span>
                 </label>
