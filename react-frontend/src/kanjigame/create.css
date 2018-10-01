@@ -13,3 +13,7 @@
   border-width: 3px;
   border-color: red
 }
+
+#createKanjiGameContainer {
+  max-width: 1500px;
+}

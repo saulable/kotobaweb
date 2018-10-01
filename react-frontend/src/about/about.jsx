@@ -1,5 +1,4 @@
 import React from 'react';
-import '../main.css';
 import { NavLink } from 'react-router-dom';
 
 function render() {
@@ -43,12 +42,12 @@ function render() {
             <form method="post" action="contact">
               <h1 className="card-title">Contact</h1>
               <div className="form-group">
-                <label className="bmd-label-static" id="emailLabel" htmlFor="emailaddress">Email</label>
-                <input type="email" className="form-control" id="emailaddress" placeholder="Your email address" />
+                <label className="bmd-label-floating" id="emailLabel" htmlFor="emailaddress">Email address</label>
+                <input type="email" className="form-control" id="emailaddress" />
               </div>
               <div className="form-group">
-                <label className="bmd-label-static" htmlFor="message" id="messageLabel">Message</label>
-                <textarea className="form-control" id="message" placeholder="Your message" rows="5" />
+                <label className="bmd-label-floating" htmlFor="message" id="messageLabel">Message</label>
+                <textarea className="form-control" id="message" rows="5" />
               </div>
               <button type="submit" className="btn btn-primary active">Submit</button>
             </form>

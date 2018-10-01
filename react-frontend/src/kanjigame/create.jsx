@@ -134,7 +134,7 @@ class Create extends Component {
 
   render() {
     return (
-      <div className="container-fluid p-5">
+      <div className="container-fluid p-5" id="createKanjiGameContainer">
         <Formik
           initialValues={{ answerTimeLimit: 30, answerLeeway: 0, username: defaultUsername, decks: [], privateGame: false }}
           validationSchema={formSchema}

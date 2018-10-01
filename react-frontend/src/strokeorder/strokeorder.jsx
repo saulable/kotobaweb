@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import './strokeorder.css';
-import availableKanjiFiles from './available_kanji_files.json'
+import availableKanjiFiles from './available_kanji_files.json';
 
 function uriForKanji(kanji) {
   let fileCodeStringLength = 5;
@@ -23,15 +23,19 @@ class TextEntry extends PureComponent {
 
   render() {
     return (
-      <div class="row p-5" ml-5>
+      <div className="row p-5">
         <form>
-          <div class="form-group input-group-lg">
-            <label class="bmd-label-static" htmlFor="kanjiInput" id="kanjiLabel">Enter Kanji</label>
-            <input id="kanjiInput" class="form-control emphasized-form-control" onChange={this.handleChange} value={this.props.value} autofocus />
+          <div className="form-group input-group-lg is-focused">
+            <label className="bmd-label-floating" htmlFor="kanjiInput" id="kanjiLabel" ref="label">Enter Kanji</label>
+            <input id="kanjiInput" className="form-control emphasized-form-control" onChange={this.handleChange} value={this.props.value} autofocus="" ref="input" />
           </div>
         </form>
       </div>
     );
+  }
+
+  componentDidMount() {
+    this.refs.input.focus();
   }
 }
 
@@ -48,7 +52,7 @@ function createKanjiCards(kanjis) {
               </a>
             </h5>
             { uri ?
-              (<img class="card-img-bottom" src={uri} alt="kanji stroke order" />) :
+              (<img className="card-img-bottom" src={uri} alt="kanji stroke order" />) :
               (<p>Unknown kanji</p>)
             }
           </div>
@@ -60,7 +64,7 @@ function createKanjiCards(kanjis) {
 
 function KanjiCards(props) {
   return (
-    <div class="row pl-5 pr-5">
+    <div className="row pl-5 pr-5">
       {createKanjiCards(props.kanjis)}
     </div>
   );
@@ -83,7 +87,7 @@ class StrokeOrder extends PureComponent {
 
   render() {
     return (
-      <div class="container-fluid" id="kanjiContainer">
+      <div className="container-fluid" id="kanjiContainer">
         <TextEntry value={this.state.kanjis.join('')} textChange={this.handleSearchChange} />
         <KanjiCards kanjis={this.state.kanjis} />
       </div>
