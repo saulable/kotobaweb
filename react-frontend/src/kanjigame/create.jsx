@@ -75,7 +75,7 @@ function RenderForm({ formikArgs }) {
               </div>
               <div className="checkbox mt-4">
                 <label>
-                  <input type="checkbox" /> Private game
+                  <Field type="checkbox" name="privateGame" /> Private game
                 </label>
               </div>
             </div>
@@ -114,7 +114,7 @@ function submitCreate(values, socket) {
     decks: values.decks.map(deck => deck.key),
     answerTimeLimitInMs: values.answerTimeLimit * 1000,
     answerForgivenessWindow: values.answerLeeway,
-    private: true, // TODO
+    private: values.privateGame,
   };
 
   socket.on(socketEvents.Server.CREATED_GAME, response => {
@@ -136,7 +136,7 @@ class Create extends Component {
     return (
       <div className="container-fluid p-5">
         <Formik
-          initialValues={{ answerTimeLimit: 30, answerLeeway: 0, username: defaultUsername, decks: [] }}
+          initialValues={{ answerTimeLimit: 30, answerLeeway: 0, username: defaultUsername, decks: [], privateGame: false }}
           validationSchema={formSchema}
           onSubmit={(values) => submitCreate(values, this.state.socket)}
         >
