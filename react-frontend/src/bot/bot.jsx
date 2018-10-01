@@ -84,9 +84,8 @@ function Header() {
     <div className="row p-5">
       <img alt="bot avatar" id="avatar" src={Avatar} />
       <div className="pl-3">
-        <div className="pl-3">
-          Kotoba Discord Bot
-          <br />
+        <div className="pl-3 mb-1">
+          <h5>Kotoba Discord Bot</h5>
           <a href="https://discordbots.org/bot/251239170058616833"><img src="https://discordbots.org/api/widget/status/251239170058616833.svg" alt="Discord Bots" /></a>
           &nbsp;
           <a href="https://discordbots.org/bot/251239170058616833"><img src="https://discordbots.org/api/widget/servers/251239170058616833.svg" alt="Discord Bots" /></a>
