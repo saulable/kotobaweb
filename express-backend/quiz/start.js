@@ -7,13 +7,17 @@ const socketIo = require('socket.io');
 const errors = require('./../../src_common/socket_errors.js');
 const events = require('./../../src_common/socket_events.js');
 const namespace = require('./../../src_common/socket_namespaces.js').KANJI_GAME;
-const generateUniqueID = require('uuid/v4');
+const generateUUID = require('uuid/v4');
 const assert = require('assert');
 
 const MAX_EVENT_HISTORY_LENGTH = 50;
 
 const roomIDForUserID = {};
 const roomForRoomID = {};
+
+function generateUniqueID() {
+  return generateUUID().substr(0, 10);
+}
 
 class UserInfo {
   constructor(username) {
@@ -208,20 +212,6 @@ class Room {
   }
 }
 
-function createErrorResponse(error) {
-  return {
-    success: false,
-    error,
-  };
-}
-
-function createSuccessResponse(result) {
-  return {
-    success: true,
-    result,
-  };
-}
-
 async function createRoom(config, sockets, socket) {
   const deckInformations = config.decks.map(deckName => {
     return {
@@ -261,9 +251,7 @@ async function createRoom(config, sockets, socket) {
 function registerCreate(sockets, socket) {
   socket.on(events.Client.CREATE_GAME, config => {
     createRoom(config, sockets, socket).then(room => {
-      if (!room) {
-        return;
-      }
+      socket.emit(events.Server.CREATED_GAME, room.roomID);
     });
   });
 }

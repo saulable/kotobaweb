@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import './create.css';
 import decks from './decks.js';
 import usernames from './usernames.js';
@@ -149,7 +150,7 @@ class Create extends Component {
     };
 
     socket.on(socketEvents.Server.CREATED_GAME, response => {
-      // TODO
+      this.props.history.push(`/kanjigame/game?username=${encodeURIComponent(values.username)}&gameID=${response}`);
     });
 
     socket.emit(socketEvents.Client.CREATE_GAME, gameConfig);
@@ -161,7 +162,7 @@ class Create extends Component {
         <Formik
           initialValues={{ answerTimeLimit: 30, answerLeeway: 0, username: defaultUsername, decks: [], privateGame: false }}
           validationSchema={formSchema}
-          onSubmit={(values) => submitCreate(values, this.state.socket)}
+          onSubmit={(values) => this.submitCreate(values, this.state.socket)}
         >
         {(formikArgs) => (
           <RenderForm formikArgs={formikArgs} />
@@ -172,4 +173,4 @@ class Create extends Component {
   }
 }
 
-export default Create;
+export default withRouter(Create);

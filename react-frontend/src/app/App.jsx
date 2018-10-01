@@ -5,6 +5,7 @@ import About from '../about/about';
 import Bot from '../bot/bot';
 import StrokeOrder from '../strokeorder/strokeorder';
 import KanjiGameCreate from '../kanjigame/create';
+import KanjiGameRoom from '../kanjigame/game';
 
 function renderNotFound() {
   return <p>Not Found</p>;
@@ -20,6 +21,7 @@ function render() {
           <Route exact path="/bot" component={Bot} />
           <Route exact path="/strokeorder" component={StrokeOrder} />
           <Route exact path="/kanjigame/create" component={KanjiGameCreate} />
+          <Route exact path="/kanjigame/game" component={KanjiGameRoom} />
           <Route render={renderNotFound} />
         </Switch>
       </div>
