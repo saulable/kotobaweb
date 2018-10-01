@@ -51,6 +51,7 @@ class Room {
 
   addPlayer(socket, username) {
     socket.join(this.roomID);
+    roomIDForUserID[socket.id] = this.roomID;
     this.userInfoForUserID[socket.id] = new UserInfo(username);
 
     this.eventHistory.forEach(historicalEvent => {
@@ -74,9 +75,16 @@ class Room {
     this.emitEventFromSender(socket, events.Server.PLAYER_LEFT, { username });
     socket.leave(this.roomID);
     delete this.userInfoForUserID[socket.id];
+    this.closeIfEmpty();
+  }
 
-    if (!Object.keys(this.userInfoForUserID)[0]) {
-      quizManager.stopQuiz(this.roomID, undefined, true);
+  empty() {
+    return !Object.keys(this.userInfoForUserID)[0];
+  }
+
+  closeIfEmpty() {
+    if (this.empty()) {
+        quizManager.stopQuiz(this.roomID, undefined, true);
     }
   }
 
@@ -233,7 +241,7 @@ async function createRoom(config, sockets, socket) {
 
   const settings = {
     scoreLimit: Number.MAX_SAFE_INTEGER,
-    unansweredQuestionLimit: 1,
+    unansweredQuestionLimit: 10,
     answerTimeLimitInMs: Math.min(Math.max(config.answerTimeLimitInMs, 5000), 180000),
     newQuestionDelayAfterUnansweredInMs: 500,
     newQuestionDelayAfterAnsweredInMs: 500,
@@ -252,33 +260,19 @@ async function createRoom(config, sockets, socket) {
 
 function registerCreate(sockets, socket) {
   socket.on(events.Client.CREATE_GAME, config => {
-    const alreadyInRoom = !!roomIDForUserID[socket.id];
-    if (alreadyInRoom) {
-      return socket.emit(
-        events.Server.CREATED_GAME,
-        createErrorResponse(errors.CreateGame.ALREADY_IN_GAME)
-      );
-    }
-
     createRoom(config, sockets, socket).then(room => {
       if (!room) {
         return;
       }
-      room.addPlayer(socket, config.username);
-      roomIDForUserID[socket.id] = room.roomID;
-      return socket.emit(
-        events.Server.CREATED_GAME,
-        createSuccessResponse({ roomID: room.roomID }),
-      );
     });
   });
 }
 
 function registerDisconnect(socket) {
   socket.on('disconnect', () => {
-    const roomID = roomIDForUserID[socket.id];
-    if (roomID) {
-      const room = roomForRoomID[roomID];
+    const joinedRoomID = roomIDForUserID[socket.id];
+    if (joinedRoomID) {
+      const room = roomForRoomID[joinedRoomID];
       room.removePlayer(socket);
     }
   });
@@ -296,3 +290,5 @@ function startListen(sockets) {
 module.exports = {
   startListen,
 };
+
+// TODO: Handle duplicate usernames

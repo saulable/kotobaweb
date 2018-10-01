@@ -131,29 +131,28 @@ function RenderForm({ formikArgs }) {
   );
 }
 
-function submitCreate(values, socket) {
-  console.log(values);
-
-  const gameConfig = {
-    decks: values.decks.map(deck => deck.key),
-    answerTimeLimitInMs: values.answerTimeLimit * 1000,
-    answerForgivenessWindow: values.answerLeeway,
-    private: values.privateGame,
-  };
-
-  socket.on(socketEvents.Server.CREATED_GAME, response => {
-    console.log('Response: ' + response);
-  });
-
-  socket.emit(socketEvents.Client.CREATE_GAME, gameConfig);
-}
-
 class Create extends Component {
   constructor(props) {
     super(props);
     this.state = {
       socket: socketIO(SOCKET_SERVER_URI),
+      createError: '',
     };
+  }
+
+  submitCreate(values, socket) {
+    const gameConfig = {
+      decks: values.decks.map(deck => deck.key),
+      answerTimeLimitInMs: values.answerTimeLimit * 1000,
+      answerForgivenessWindow: values.answerLeeway,
+      private: values.privateGame,
+    };
+
+    socket.on(socketEvents.Server.CREATED_GAME, response => {
+      // TODO
+    });
+
+    socket.emit(socketEvents.Client.CREATE_GAME, gameConfig);
   }
 
   render() {

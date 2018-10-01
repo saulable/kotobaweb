@@ -22,17 +22,16 @@ class VolumeSlider extends Component {
   }
 
   render() {
-    let { value } = this.state
     return (
       <div className="form-group">
         <label className="bmd-label-floating label-darker bold" htmlFor={this.props.name}>
-          <b>{this.props.title}</b> - {this.props.format(value)}
+          <b>{this.props.title}</b> - {this.props.format(this.state.value)}
         </label>
         <Slider
           name={this.props.name}
-          value={value}
-          min={parseInt(this.props.min)}
-          max={parseInt(this.props.max)}
+          value={parseInt(this.state.value, 10)}
+          min={parseInt(this.props.min, 10)}
+          max={parseInt(this.props.max, 10)}
           onChange={this.handleOnChange}
           onChangeComplete={this.handleOnChangeComplete}
           format={this.props.format}
