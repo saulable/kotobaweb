@@ -42,7 +42,7 @@ function formatSeconds(unformatted) {
 }
 
 function formatMilliseconds(unformatted) {
-  return `${unformatted} ms`;
+  return `${unformatted} milliseconds`;
 }
 
 function RenderForm({ formikArgs }) {
@@ -76,9 +76,9 @@ function RenderForm({ formikArgs }) {
             </div>
             <div className="card-body">
               <div className="form-group">
-                <label className="bmd-label-floating label-darker" htmlFor="answerTimeLimit">Answer time limit (seconds)</label>
                 <Slider
                   name="answerTimeLimit"
+                  title="Answer time limit"
                   min="5"
                   max="100"
                   defaultValue="30"
@@ -87,9 +87,9 @@ function RenderForm({ formikArgs }) {
                 />
               </div>
               <div className="form-group mt-5">
-                <label className="bmd-label-floating label-darker" htmlFor="answerLeeway">Answer leeway (milliseconds)</label>
                 <Slider
                   name="answerLeeway"
+                  title="Answer leeway"
                   min="0"
                   max="10000"
                   defaultValue="0"
@@ -113,10 +113,8 @@ function RenderForm({ formikArgs }) {
               <h5 className="card-title">User</h5>
             </div>
             <div className="card-body">
-              <div className="form-group">
-                <label className="bmd-label-floating label-darker" htmlFor="username">Username</label>
-                <Field className="form-control" name="username" />
-              </div>
+              <label className="label-darker"><b>Username</b></label>
+              <Field className="form-control mt-2" name="username" />
               <button
                 type="submit"
                 className="btn btn-raised btn-primary mt-3"
