@@ -8,6 +8,10 @@
   margin: 0px;
 }
 
+.card-body {
+  padding-top: 15px;
+}
+
 .errored {
   border-style: solid;
   border-width: 3px;
