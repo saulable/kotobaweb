@@ -19,7 +19,6 @@
     "lint": "./node_modules/eslint/bin/eslint.js . --ext .js,.jsx",
     "lintfix": "./node_modules/eslint/bin/eslint.js . --ext .js,.jsx --fix"
   },
-  "proxy": "http://localhost:3000",
   "devDependencies": {
     "eslint": "^5.6.0",
     "eslint-config-airbnb": "^17.1.0",
