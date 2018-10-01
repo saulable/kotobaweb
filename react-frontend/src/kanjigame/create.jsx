@@ -8,11 +8,9 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import socketIO from 'socket.io-client';
 import socketEvents from '../common/socket_events.js';
-import socketNamespaces from '../common/socket_namespaces.js';
 import Slider from '../controls/slider.jsx';
 import './../main.css';
-
-const SOCKET_SERVER_URI = `http://localhost:3002${socketNamespaces.KANJI_GAME}`;
+import constants from './constants.js';
 
 const listPickerItems = decks.map(deckInformation => ({
   key: deckInformation.shortName,
@@ -136,7 +134,7 @@ class Create extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: socketIO(SOCKET_SERVER_URI),
+      socket: socketIO(constants.SOCKET_SERVER_URI),
       createError: '',
     };
   }

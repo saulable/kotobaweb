@@ -15,6 +15,7 @@ module.exports = {
   },
   Client: {
     CREATE_GAME: 'create game',
+    JOIN_GAME: 'join game',
     SKIP: 'skip',
     CHAT: 'chat',
   },

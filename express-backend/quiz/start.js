@@ -32,6 +32,7 @@ class Room {
     this.sockets = sockets;
     this.eventHistory = [];
     this.userInfoForUserID = {};
+    this.latestInternalScores = {};
   }
 
   addEventToHistory(eventName, data) {
@@ -62,6 +63,7 @@ class Room {
       socket.emit(historicalEvent.eventName, historicalEvent.data);
     });
 
+    this.emitLatestScores();
     this.emitEventFromSender(socket, events.Server.PLAYER_JOINED, { username });
 
     socket.on(events.Client.SKIP, () => {
@@ -79,6 +81,7 @@ class Room {
     this.emitEventFromSender(socket, events.Server.PLAYER_LEFT, { username });
     socket.leave(this.roomID);
     delete this.userInfoForUserID[socket.id];
+    this.emitLatestScores();
     this.closeIfEmpty();
   }
 
@@ -104,6 +107,15 @@ class Room {
     delete roomForRoomID[this.roomID];
   }
 
+  emitLatestScores() {
+    const scoreForUserName = {};
+    Object.keys(this.userInfoForUserID).forEach(userID => {
+      scoreForUserName[this.userInfoForUserID[userID].username] = scoreForUserID[userID] || 0;
+    });
+
+    this.emitEventToAll(events.Server.SCORE_UPDATE, scoreForUserName);
+  }
+
   // ClientDelegate callbacks
   notifyStarting(inMs, quizName, quizArticle) {
     console.log('Starting game');
@@ -127,12 +139,8 @@ class Room {
       answerers: usernames,
     });
 
-    const scoreForUserName = {};
-    Object.keys(this.userInfoForUserID).forEach(userID => {
-      scoreForUserName[this.userInfoForUserID[userID].username] = scoreForUserID[userID] || 0;
-    });
-
-    this.emitEventToAll(events.Server.SCORE_UPDATE, scoreForUserName);
+    this.latestInternalScores = scoreForUserID;
+    this.emitLatestScores();
   }
 
   showQuestion(question) {
