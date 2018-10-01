@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import socketIO from 'socket.io-client';
 import socketEvents from '../common/socket_events.js';
 import socketNamespaces from '../common/socket_namespaces.js';
+import './../main.css';
 
 const SOCKET_SERVER_URI = `http://localhost:3002${socketNamespaces.KANJI_GAME}`;
 
@@ -65,16 +66,16 @@ function RenderForm({ formikArgs }) {
               <h5 className="card-title">Configuration</h5>
             </div>
             <div className="card-body">
-              <div>
-                <label className="bmd-label-static" htmlFor="answerTimeLimit">Answer time limit (seconds)</label>
+              <div className="form-group">
+                <label className="bmd-label-floating label-darker" htmlFor="answerTimeLimit">Answer time limit (seconds)</label>
                 <Field className="form-control" name="answerTimeLimit" />
               </div>
-              <div>
-                <label className="bmd-label-static mt-3" htmlFor="answerLeeway">Answer leeway (milliseconds)</label>
+              <div className="form-group">
+                <label className="bmd-label-floating label-darker" htmlFor="answerLeeway">Answer leeway (milliseconds)</label>
                 <Field className="form-control" name="answerLeeway" />
               </div>
               <div className="checkbox mt-4">
-                <label>
+                <label className="label-darker">
                   <Field type="checkbox" name="privateGame" /> Private game
                 </label>
               </div>
@@ -89,8 +90,10 @@ function RenderForm({ formikArgs }) {
               <h5 className="card-title">User</h5>
             </div>
             <div className="card-body">
-              <label className="bmd-label-static" htmlFor="username">Username</label>
-              <Field className="form-control" name="username" />
+              <div className="form-group">
+                <label className="bmd-label-floating label-darker" htmlFor="username">Username</label>
+                <Field className="form-control" name="username" />
+              </div>
               <button
                 type="submit"
                 className="btn btn-raised btn-primary mt-3"

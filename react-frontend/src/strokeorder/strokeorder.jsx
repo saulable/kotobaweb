@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import './strokeorder.css';
 import availableKanjiFiles from './available_kanji_files.json';
+import './../main.css';
 
 function uriForKanji(kanji) {
   let fileCodeStringLength = 5;
@@ -26,7 +27,7 @@ class TextEntry extends PureComponent {
       <div className="row p-5">
         <form>
           <div className="form-group input-group-lg is-focused">
-            <label className="bmd-label-floating" htmlFor="kanjiInput" id="kanjiLabel" ref="label">Enter Kanji</label>
+            <label className="bmd-label-floating label-darker" htmlFor="kanjiInput" id="kanjiLabel" ref="label">Enter Kanji</label>
             <input id="kanjiInput" className="form-control emphasized-form-control" onChange={this.handleChange} value={this.props.value} autoFocus ref="input" />
           </div>
         </form>
