@@ -40,7 +40,7 @@ function render() {
         <div className="col-lg-4 card">
           <div className="card-body">
             <form method="post" action="contact">
-              <h1 className="card-title">Contact</h1>
+              <h1 className="card-title mt-3">Contact</h1>
               <div className="form-group">
                 <label className="bmd-label-floating" id="emailLabel" htmlFor="emailaddress">Email address</label>
                 <input type="email" className="form-control" id="emailaddress" />
