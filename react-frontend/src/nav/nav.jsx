@@ -2,6 +2,9 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 function render() {
+  const inKanjiGame = window.location.pathname.startsWith('/kanjigame');
+  const dropdownClass = `nav-link dropdown-toggle${inKanjiGame ? ' active' : ''}`;
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
@@ -11,12 +14,12 @@ function render() {
       <div className="collapse navbar-collapse" id="navbar">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item dropdown">
-            <span className="nav-link dropdown-toggle" id="gameDropdown" data-toggle="dropdown">
+            <a className={dropdownClass} href="#" id="gameDropdown" data-toggle="dropdown">
               Kanji Game
-            </span>
+            </a>
             <div className="dropdown-menu">
-              <NavLink exact activeClassName="active" className="dropdown-item" to="/kanjigame/create">Create</NavLink>
-              <NavLink exact activeClassName="active" className="dropdown-item" to="/kanjigame/join">Join</NavLink>
+              <NavLink exact activeClassName="" className="dropdown-item" to="/kanjigame/create">Create</NavLink>
+              <NavLink exact activeClassName="" className="dropdown-item" to="/kanjigame/join">Join</NavLink>
             </div>
           </li>
           <li className="nav-item">
