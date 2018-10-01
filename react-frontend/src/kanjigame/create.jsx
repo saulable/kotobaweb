@@ -6,8 +6,10 @@ import ListPicker from '../controls/list_picker';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import socketIO from 'socket.io-client';
+import socketEvents from '../common/socket_events.js';
+import socketNamespaces from '../common/socket_namespaces.js';
 
-const SOCKET_SERVER_URI = 'http://localhost:3020';
+const SOCKET_SERVER_URI = `http://localhost:3002${socketNamespaces.KANJI_GAME}`;
 
 const listPickerItems = decks.map(deckInformation => ({
   key: deckInformation.shortName,
@@ -107,22 +109,19 @@ function RenderForm({ formikArgs }) {
 
 function submitCreate(values, socket) {
   console.log(values);
-  fetch('http://localhost:3000/users').then(response => {
-    response.json().then(t => console.log('REEEEEEE ' + JSON.stringify(t)));
-  });
 
   const gameConfig = {
-    decks: Object.keys(values.decks),
+    decks: values.decks.map(deck => deck.key),
     answerTimeLimitInMs: values.answerTimeLimit * 1000,
     answerForgivenessWindow: values.answerLeeway,
     private: true, // TODO
   };
 
-  socket.on('room created', function(response) {
+  socket.on(socketEvents.Server.CREATED_GAME, response => {
     console.log('Response: ' + response);
   });
 
-  socket.emit('create', gameConfig);
+  socket.emit(socketEvents.Client.CREATE_GAME, gameConfig);
 }
 
 class Create extends Component {

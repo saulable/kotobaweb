@@ -38,11 +38,13 @@ class Room {
   }
 
   emitEventToAll(eventName, data) {
-    this.sockets.to(this.roomID, data);
+    console.log(`Emitting '${eventName}' to all`);
+    this.sockets.to(this.roomID).emit(eventName, data);
     this.addEventToHistory(eventName, data);
   }
 
   emitEventFromSender(socket, eventName, data) {
+    console.log(`Emitting '${eventName}' from sender`);
     socket.to(this.roomID).emit(eventName, data);
     this.addEventToHistory(eventName, data);
   }
@@ -55,7 +57,7 @@ class Room {
       socket.emit(historicalEvent.eventName, historicalEvent.data);
     });
 
-    this.emitEventFromSender(socket, { username });
+    this.emitEventFromSender(socket, events.Server.PLAYER_JOINED, { username });
 
     socket.on(events.Client.SKIP, () => {
       quizManager.skip(this.roomID);
@@ -82,7 +84,8 @@ class Room {
     this.emitEventToAll(reason, { unansweredQuestions });
 
     Object.keys(this.userInfoForUserID).forEach(userID => {
-      this.sockets.connected[userID].leave(this.roomID);
+      const unqualifiedUserID = userID.replace(`${namespace}#`, '');
+      this.sockets.in(this.roomID).connected[unqualifiedUserID].leave(this.roomID);
       delete roomIDForUserID[userID];
     });
 
@@ -175,7 +178,7 @@ class Room {
     wrongAnswers
   ) {
     this.handleGameEnded(
-      events.SERVER.GAME_ENDED_TOO_MANY_UNANSWERED_QUESTIONS,
+      events.Server.GAME_ENDED_TOO_MANY_UNANSWERED_QUESTIONS,
       unansweredQuestions
     );
   }
@@ -214,7 +217,7 @@ function createSuccessResponse(result) {
 async function createRoom(config, sockets, socket) {
   const deckInformations = config.decks.map(deckName => {
     return {
-      deckNameOrUniqueID: deckName,
+      deckNameOrUniqueId: deckName,
     };
   });
 
@@ -222,6 +225,7 @@ async function createRoom(config, sockets, socket) {
   const decks = decksStatus.decks;
 
   if (!decks || decks.length === 0) {
+    console.warn('No matching decks');
     return;
   }
 
@@ -229,7 +233,7 @@ async function createRoom(config, sockets, socket) {
 
   const settings = {
     scoreLimit: Number.MAX_SAFE_INTEGER,
-    unansweredQuestionLimit: 10,
+    unansweredQuestionLimit: 1,
     answerTimeLimitInMs: Math.min(Math.max(config.answerTimeLimitInMs, 5000), 180000),
     newQuestionDelayAfterUnansweredInMs: 500,
     newQuestionDelayAfterAnsweredInMs: 500,
@@ -237,8 +241,8 @@ async function createRoom(config, sockets, socket) {
   };
 
   const roomID = generateUniqueID();
-  const room = new Room(sockets, config.private);
-  roomForRoomID[roomID] = roomInformation;
+  const room = new Room(roomID, sockets, config.private);
+  roomForRoomID[roomID] = room;
 
   const session = Session.createNew(roomID, undefined, deckCollection, room, undefined, settings, normalGameMode);
   quizManager.startSession(session, roomID);
@@ -257,11 +261,14 @@ function registerCreate(sockets, socket) {
     }
 
     createRoom(config, sockets, socket).then(room => {
+      if (!room) {
+        return;
+      }
       room.addPlayer(socket, config.username);
       roomIDForUserID[socket.id] = room.roomID;
       return socket.emit(
         events.Server.CREATED_GAME,
-        createSuccessResponse({ roomID }),
+        createSuccessResponse({ roomID: room.roomID }),
       );
     });
   });

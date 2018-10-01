@@ -5,9 +5,9 @@ const request = require('request-promise');
 const arrayOnDisk = require('disk-array');
 const globals = require('./../globals.js');
 
-const { PublicError } = reload('monochrome-bot');
-const decksMetadata = reload('./../../generated/quiz/decks.json');
-const cardStrategies = reload('./card_strategies.js');
+const { PublicError } = require('monochrome-bot');
+const decksMetadata = require('./../../generated/quiz/decks.json');
+const cardStrategies = require('./card_strategies.js');
 
 const LOGGER_TITLE = 'QUIZ DECK LOADER';
 const PASTEBIN_REGEX = /pastebin\.com\/(?:raw\/)?(.*)/;
@@ -281,82 +281,6 @@ function countRowsForUserId(data, userId) {
   return total / 3;
 }
 
-async function getDeckFromInternet(deckInformation, invokerUserId, invokerUserName) {
-  let deckUri;
-
-  // If the deck name is a pastebin URI, extract the good stuff.
-  const pastebinRegexResults = PASTEBIN_REGEX.exec(deckInformation.deckNameOrUniqueId);
-  if (pastebinRegexResults) {
-    const pastebinCode = pastebinRegexResults[1];
-    deckUri = `http://pastebin.com/raw/${pastebinCode}`;
-  }
-
-  // Check for a matching database entry and use the URI from there if there is one.
-  const databaseData = await globals.persistence.getGlobalData();
-  let foundInDatabase = false;
-  let uniqueId;
-  let author;
-  if (databaseData.communityDecks) {
-    const foundDatabaseEntry = databaseData.communityDecks[deckInformation.deckNameOrUniqueId]
-      || databaseData.communityDecks[deckUri];
-
-    if (foundDatabaseEntry) {
-      foundInDatabase = true;
-      deckUri = foundDatabaseEntry.uri;
-      ({ uniqueId } = foundDatabaseEntry);
-      author = foundDatabaseEntry.authorName;
-    }
-  }
-
-  // If the given deck name is not a pastebin URI, and we didn't
-  // find one in the database, the deck is unfound. Return undefined.
-  if (!deckUri) {
-    return undefined;
-  }
-
-  // Try to create the deck from pastebin.
-  const pastebinData = await tryFetchRawFromPastebin(deckUri);
-  let deck = tryCreateDeckFromRawData(pastebinData, deckUri);
-  deck = shallowCopyDeckAndAddModifiers(deck, deckInformation);
-
-  // If the deck was found in the database, update its field from database values.
-  // If it wasn't, add the appropriate entries to the database for next time.
-  if (foundInDatabase) {
-    deck.uniqueId = uniqueId;
-    deck.author = author;
-  } else if (invokerUserId && invokerUserName) {
-    await globals.persistence.editGlobalData((data) => {
-      if (!data.communityDecks) {
-        // eslint-disable-next-line no-param-reassign
-        data.communityDecks = {};
-      }
-      if (countRowsForUserId(data, invokerUserId) >= MAX_DECKS_PER_USER) {
-        throwParsePublicError(`You have already added the maximum of ${MAX_DECKS_PER_USER} decks. You can delete existing decks with **k!quiz delete deckname**.`, 0, deckUri);
-      }
-      if (data.communityDecks[deck.shortName]) {
-        throwParsePublicError('There is already a deck with that SHORT NAME. Please choose another SHORT NAME and make a new paste.', 0, deckUri);
-      }
-      uniqueId = Date.now().toString();
-      const databaseEntry = {
-        uri: deckUri, authorId: invokerUserId, authorName: invokerUserName, uniqueId,
-      };
-      // eslint-disable-next-line no-param-reassign
-      data.communityDecks[deckUri] = databaseEntry;
-      // eslint-disable-next-line no-param-reassign
-      data.communityDecks[uniqueId] = databaseEntry;
-      // eslint-disable-next-line no-param-reassign
-      data.communityDecks[deck.shortName] = databaseEntry;
-      deck.uniqueId = uniqueId;
-      deck.author = invokerUserName;
-      return data;
-    });
-  }
-
-  deck.description = '[User submitted deck loaded remotely from Pastebin]';
-
-  return deck;
-}
-
 async function deleteInternetDeck(searchTerm, deletingUserId) {
   let returnStatus;
 
@@ -419,25 +343,6 @@ async function getQuizDecks(deckInfos, invokerUserId, invokerUserName) {
     decks.push(getDeckFromMemory(deckInfo));
   });
 
-  // For any decks not found in memory, try to get from internet.
-  const promises = [];
-  for (let i = 0; i < decks.length; i += 1) {
-    const deck = decks[i];
-    if (!deck) {
-      const internetDeckPromise = getDeckFromInternet(
-        deckInfos[i],
-        invokerUserId,
-        invokerUserName,
-      ).then((internetDeck) => {
-        decks[i] = internetDeck;
-      });
-
-      promises.push(internetDeckPromise);
-    }
-  }
-
-  await Promise.all(promises);
-
   // If not all decks were found, return error.
   for (let i = 0; i < decks.length; i += 1) {
     const deck = decks[i];
@@ -469,6 +374,10 @@ function createReviewDeck(unansweredCards) {
     cards: createCardGetterFromInMemoryArray(deepCopy(unansweredCards)),
   };
 }
+
+loadDecks().then(() => {
+  console.log('Decks loaded');
+});
 
 module.exports = {
   getQuizDecks,

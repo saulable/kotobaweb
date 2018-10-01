@@ -2,9 +2,9 @@
 const reload = require('require-reload')(require);
 const state = require('./../static_state.js');
 const assert = require('assert');
-const saveManager = reload('./pause_manager.js');
-const cardStrategies = reload('./card_strategies.js');
-const retryPromise = reload('./../util/retry_promise.js');
+const saveManager = require('./pause_manager.js');
+const cardStrategies = require('./card_strategies.js');
+const retryPromise = require('./../util/retry_promise.js');
 const globals = require('./../globals.js');
 
 const LOGGER_TITLE = 'QUIZ';
