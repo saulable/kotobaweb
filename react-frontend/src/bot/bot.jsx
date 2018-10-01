@@ -12,15 +12,15 @@ function createModals(commands) {
   return commands.map((command) => {
     return command.examples.filter(example => example.imageName).map((example) => {
       return (
-        <div class="modal fade" id={modalIdForExample(example)}>
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="center-block">
-                <div class="modal-header">
-                  <h5 class="modal-title">{example.exampleText}</h5>
-                  <button type="button" class="close" data-dismiss="modal" />
+        <div className="modal fade" id={modalIdForExample(example)} key={example.key}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="center-block">
+                <div className="modal-header">
+                  <h5 className="modal-title">{example.exampleText}</h5>
+                  <button type="button" className="close" data-dismiss="modal" />
                 </div>
-                <div class="modal-body">
+                <div className="modal-body">
                   <img src={require(`./../img/command_example_images/${example.imageName}`)} alt="command example" />
                 </div>
               </div>
@@ -69,7 +69,7 @@ function Commands() {
     <div>
       <div className="row pl-5 pb-4 pt-5">
         <div className="col-sm-12 pl-0">
-          <h3 className>Commands</h3>
+          <h3>Commands</h3>
         </div>
       </div>
       <div className="row pl-5 pr-5">

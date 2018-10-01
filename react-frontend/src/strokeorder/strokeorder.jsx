@@ -27,15 +27,11 @@ class TextEntry extends PureComponent {
         <form>
           <div className="form-group input-group-lg is-focused">
             <label className="bmd-label-floating" htmlFor="kanjiInput" id="kanjiLabel" ref="label">Enter Kanji</label>
-            <input id="kanjiInput" className="form-control emphasized-form-control" onChange={this.handleChange} value={this.props.value} autofocus="" ref="input" />
+            <input id="kanjiInput" className="form-control emphasized-form-control" onChange={this.handleChange} value={this.props.value} autoFocus ref="input" />
           </div>
         </form>
       </div>
     );
-  }
-
-  componentDidMount() {
-    this.refs.input.focus();
   }
 }
 
