@@ -65,7 +65,11 @@ class Room {
     return Object.values(this.userInfoForUserID).some(userInfo => userInfo.username === username);
   }
 
-  getUniqueUsername(desiredUsername) {
+  coerceUsername(desiredUsername) {
+    if (!desiredUsername) {
+      desiredUsername = 'Anonymous';
+    }
+
     if (!this.usernameTaken(desiredUsername)) {
       return desiredUsername;
     }
@@ -82,7 +86,7 @@ class Room {
   }
 
   addPlayer(socket, username) {
-    username = this.getUniqueUsername(username);
+    username = this.coerceUsername(username);
 
     socket.join(this.roomID);
     this.userInfoForUserID[socket.id] = new UserInfo(username);
@@ -142,7 +146,7 @@ class Room {
   emitLatestScores() {
     const scoreForUserName = {};
     Object.keys(this.userInfoForUserID).forEach(userID => {
-      scoreForUserName[this.userInfoForUserID[userID].username] = scoreForUserID[userID] || 0;
+      scoreForUserName[this.userInfoForUserID[userID].username] = this.latestInternalScores[userID] || 0;
     });
 
     this.emitEventToAll(events.Server.SCORE_UPDATE, scoreForUserName);
