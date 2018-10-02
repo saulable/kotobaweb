@@ -7,16 +7,21 @@ const socketIo = require('socket.io');
 const errors = require('./../../src_common/socket_errors.js');
 const events = require('./../../src_common/socket_events.js');
 const namespace = require('./../../src_common/socket_namespaces.js').KANJI_GAME;
-const generateUUID = require('uuid/v4');
 const assert = require('assert');
 
 const MAX_EVENT_HISTORY_LENGTH = 50;
-
-const roomIDForUserID = {};
 const roomForRoomID = {};
 
+let uniqueIDIndex = 0;
+
+// Considered using UUIDs for this but they were longer than I'd like,
+// since this is exposed to the user in the game join URI.
+// This algorithm will generate unique IDs that are sufficiently
+// unguessable for this application.
 function generateUniqueID() {
-  return generateUUID().substr(0, 10);
+  const randomNumber = Math.floor(Math.random() * 10000000);
+  ++uniqueIDIndex;
+  return `${randomNumber}-${uniqueIDIndex}`;
 }
 
 class UserInfo {
@@ -33,6 +38,8 @@ class Room {
     this.eventHistory = [];
     this.userInfoForUserID = {};
     this.latestInternalScores = {};
+
+    roomForRoomID[roomID] = this;
   }
 
   addEventToHistory(eventName, data) {
@@ -54,9 +61,30 @@ class Room {
     this.addEventToHistory(eventName, data);
   }
 
+  usernameTaken(username) {
+    return Object.values(this.userInfoForUserID).some(userInfo => userInfo.username === username);
+  }
+
+  getUniqueUsername(desiredUsername) {
+    if (!this.usernameTaken(desiredUsername)) {
+      return desiredUsername;
+    }
+
+    const index = 1;
+    while (true) {
+      const coercedUsername = index === 0 ? desiredUsername : `${desiredUsername}${index}`;
+      if (!this.usernameTaken(coercedUsername)) {
+        return coercedUsername;
+      }
+
+      index += 1;
+    }
+  }
+
   addPlayer(socket, username) {
+    username = this.getUniqueUsername(username);
+
     socket.join(this.roomID);
-    roomIDForUserID[socket.id] = this.roomID;
     this.userInfoForUserID[socket.id] = new UserInfo(username);
 
     this.eventHistory.forEach(historicalEvent => {
@@ -73,6 +101,10 @@ class Room {
     socket.on(events.Client.CHAT, msg => {
       this.emitEventFromSender(socket, events.Server.CHAT, { msg, username });
       quizManager.processUserInput(this.roomID, socket.id, username, msg);
+    });
+
+    socket.on('disconnect', () => {
+      this.removePlayer(socket);
     });
   }
 
@@ -100,8 +132,8 @@ class Room {
 
     Object.keys(this.userInfoForUserID).forEach(userID => {
       const unqualifiedUserID = userID.replace(`${namespace}#`, '');
-      this.sockets.in(this.roomID).connected[unqualifiedUserID].leave(this.roomID);
-      delete roomIDForUserID[userID];
+      const client = this.sockets.in(this.roomID).connected[unqualifiedUserID];
+      client.leave(this.roomID);
     });
 
     delete roomForRoomID[this.roomID];
@@ -231,7 +263,6 @@ async function createRoom(config, sockets, socket) {
   const decks = decksStatus.decks;
 
   if (!decks || decks.length === 0) {
-    console.warn('No matching decks');
     return;
   }
 
@@ -248,7 +279,6 @@ async function createRoom(config, sockets, socket) {
 
   const roomID = generateUniqueID();
   const room = new Room(roomID, sockets, config.private);
-  roomForRoomID[roomID] = room;
 
   const session = Session.createNew(roomID, undefined, deckCollection, room, undefined, settings, normalGameMode);
   quizManager.startSession(session, roomID);
@@ -264,12 +294,14 @@ function registerCreate(sockets, socket) {
   });
 }
 
-function registerDisconnect(socket) {
-  socket.on('disconnect', () => {
-    const joinedRoomID = roomIDForUserID[socket.id];
-    if (joinedRoomID) {
-      const room = roomForRoomID[joinedRoomID];
-      room.removePlayer(socket);
+function registerJoin(socket) {
+  socket.on(events.Client.JOIN_GAME, args => {
+    const { gameID, username } = args;
+    const game = roomForRoomID[gameID];
+    if (!game) {
+      socket.emit(events.Server.NO_SUCH_GAME);
+    } else {
+      game.addPlayer(socket, username);
     }
   });
 }
@@ -279,12 +311,10 @@ function startListen(sockets) {
 
   socketNamespace.on('connection', socket => {
     registerCreate(sockets, socket);
-    registerDisconnect(socket);
+    registerJoin(socket);
   });
 }
 
 module.exports = {
   startListen,
 };
-
-// TODO: Handle duplicate usernames

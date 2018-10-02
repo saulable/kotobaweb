@@ -16,14 +16,13 @@ class Game extends Component {
 
   render() {
     return (
-      <div>
+      <div id="events">
       </div>
     );
   }
 
   componentDidMount() {
     const query = queryString.parse(this.props.location.search);
-    console.log(query);
     this.state.socket.emit(socketEvents.Client.JOIN_GAME, query.gameID);
   }
 }

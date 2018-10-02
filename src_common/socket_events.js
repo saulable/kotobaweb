@@ -12,6 +12,7 @@ module.exports = {
     GAME_ENDED_MAINTENANCE: 'game ended going offline for maintenance',
     CHAT: 'chat',
     PLAYER_JOINED: 'player joined',
+    NO_SUCH_GAME: 'no such game',
   },
   Client: {
     CREATE_GAME: 'create game',
