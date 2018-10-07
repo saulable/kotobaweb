@@ -67,11 +67,6 @@ function createCommandsJsx() {
 function Commands() {
   return (
     <div>
-      <div class="row pl-5 pt-5">
-        <div class="col-sm-12">
-          <h3>Commands</h3>
-        </div>
-      </div>
       <div className="row pt-3 pl-5 pr-5">
         {createCommandsJsx()}
       </div>
@@ -81,9 +76,9 @@ function Commands() {
 
 function Header() {
   return (
-    <div className="row p-5">
+    <div className="row pl-5 pt-5 pb-5 bg-light">
       <div className="col-sm-12">
-        <img class="align-top" alt="bot avatar" id="avatar" src={Avatar} />
+        <img className="align-top" alt="bot avatar" id="avatar" src={Avatar} />
         <div className="inline-block ml-4">
           <h5 className="mb-2">Kotoba Discord Bot</h5>
           <a href="https://discordbots.org/bot/251239170058616833"><img src="https://discordbots.org/api/widget/status/251239170058616833.svg" alt="Discord Bots" /></a>
@@ -91,11 +86,28 @@ function Header() {
           <a href="https://discordbots.org/bot/251239170058616833"><img src="https://discordbots.org/api/widget/servers/251239170058616833.svg" alt="Discord Bots" /></a>
           <br />
           <div className="mt-3">
-            <a href="https://discordapp.com/oauth2/authorize?client_id=251239170058616833&scope=bot" target="_blank">DISCORD INVITE</a>
+            <a href="https://discordapp.com/oauth2/authorize?client_id=251239170058616833&scope=bot" target="_blank">INVITE</a>
             <a className="ml-4" href="https://github.com/mistval/kotoba" target="_blank">GITHUB</a>
-            <a className="ml-4" href="https://discord.gg/zkAKbyJ" target="_blank">HELP SERVER</a>
+            <a className="ml-4" href="https://discord.gg/zkAKbyJ" target="_blank">HELP</a>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function SubMenu() {
+  return (
+    <div className="row mb-5">
+      <div className="col-sm-12">
+        <ul className="nav nav-tabs bg-light pl-5">
+          <li className="nav-item">
+            <a className="nav-link submenu-nav-link active" href="#">Commands</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link submenu-nav-link" href="#">Quiz Manual</a>
+          </li>
+        </ul>
       </div>
     </div>
   );
@@ -106,6 +118,7 @@ function render() {
     <div id="container-fluid">
       {createModals(commands)}
       <Header />
+      <SubMenu />
       <Commands />
     </div>
   );

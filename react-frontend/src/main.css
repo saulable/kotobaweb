@@ -11,3 +11,7 @@
 .label-darker {
   color: rgba(0, 0, 0, .65);
 }
+
+.submenu-nav-link.active {
+  border-color: #009688 !important;
+}
