@@ -102,8 +102,8 @@ class Room {
       quizManager.skip(this.roomID);
     });
 
-    socket.on(events.Client.CHAT, msg => {
-      this.emitEventFromSender(socket, events.Server.CHAT, { msg, username });
+    socket.on(events.Client.CHAT, text => {
+      this.emitEventFromSender(socket, events.Server.CHAT, { text, username });
       quizManager.processUserInput(this.roomID, socket.id, username, msg);
     });
 
