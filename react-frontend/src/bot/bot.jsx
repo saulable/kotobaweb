@@ -3,6 +3,8 @@ import './bot.css';
 import '../main.css';
 import Avatar from '../img/kotoba_avatar.png';
 import commands from './commands';
+import SubmenuBar from './../controls/submenu_bar.jsx';
+import manualSections from './manual_sections.jsx';
 
 function modalIdForExample(example) {
   return `modal-${example.imageName}`;
@@ -96,30 +98,39 @@ function Header() {
   );
 }
 
-function SubMenu() {
+function TableOfContents() {
   return (
-    <div className="row mb-5">
-      <div className="col-sm-12">
-        <ul className="nav nav-tabs bg-light pl-5">
-          <li className="nav-item">
-            <a className="nav-link submenu-nav-link active" href="#">Commands</a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link submenu-nav-link" href="#">Quiz Manual</a>
-          </li>
-        </ul>
-      </div>
+    <div class="col-sm-3">
+      { manualSections.map(section => {
+        return (
+          <div>
+            { section.title }
+          </div>
+        );
+      }) }
     </div>
   );
 }
+
+function QuizManual() {
+  return (
+    <div class="row p-5">
+      <TableOfContents />
+    </div>
+  );
+}
+
+const contentForTabName = {
+  COMMANDS: Commands,
+  "QUIZ MANUAL": QuizManual,
+};
 
 function render() {
   return (
     <div id="container-fluid">
       {createModals(commands)}
       <Header />
-      <SubMenu />
-      <Commands />
+      <SubmenuBar initialTabName="QUIZ MANUAL" contentForTabName={contentForTabName} />
     </div>
   );
 }
