@@ -4,6 +4,10 @@
   margin-right: auto;
  }
 
+ .inline-block {
+   display: inline-block;
+ }
+
 .label-darker {
   color: rgba(0, 0, 0, .65);
 }
