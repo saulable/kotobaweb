@@ -15,3 +15,7 @@
 .submenu-nav-link.active {
   border-color: #009688 !important;
 }
+
+.toc-item {
+  font-size: 13px;
+}

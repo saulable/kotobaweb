@@ -8,6 +8,12 @@ class Submenu extends Component {
     };
   }
 
+  onClick = clickedTitle => {
+    this.setState({
+      currentTabName: clickedTitle,
+    });
+  }
+
   render() {
     const TabContent = this.props.contentForTabName[this.state.currentTabName];
     return (
@@ -18,7 +24,7 @@ class Submenu extends Component {
               { Object.keys(this.props.contentForTabName).map(tabName => {
                 return (
                   <li className="nav-item" key={tabName}>
-                    <a className={`nav-link submenu-nav-link${this.state.currentTabName === tabName ? ' active' : ''}`} href="#">{tabName}</a>
+                    <a className={`nav-link submenu-nav-link${this.state.currentTabName === tabName ? ' active' : ''}`} href="#" onClick={() => this.onClick(tabName)}>{tabName}</a>
                   </li>
                 );
               })}

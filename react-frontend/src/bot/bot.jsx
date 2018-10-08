@@ -98,24 +98,29 @@ function Header() {
   );
 }
 
-function TableOfContents() {
-  return (
-    <div class="col-sm-3">
-      { manualSections.map(section => {
-        return (
-          <div>
-            { section.title }
-          </div>
-        );
-      }) }
-    </div>
-  );
-}
-
 function QuizManual() {
   return (
-    <div class="row p-5">
-      <TableOfContents />
+    <div className="row p-5 mr-5">
+      <div className="col-lg-2 col-md-3 col-sm-12">
+        { manualSections.map(section => {
+          return (
+            <p className="toc-item text-muted" key={section.title}>
+              <a href={`#${section.title}`}>{ section.title }</a>
+            </p>
+          );
+        }) }
+      </div>
+      <div className="col-lg-10 col-md-9 col-sm-12">
+        { manualSections.map(section => {
+          const Instructions = section.content;
+          return (
+            <div className="mb-5" id={section.title} key={section.title}>
+              <h3>{ section.title }</h3>
+              <Instructions />
+            </div>
+          );
+        }) }
+      </div>
     </div>
   );
 }
