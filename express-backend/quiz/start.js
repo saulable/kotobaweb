@@ -51,7 +51,7 @@ class Room {
 
   emitEventToAll(eventName, data) {
     console.log(`Emitting '${eventName}' to all`);
-    this.sockets.to(this.roomID).emit(eventName, data);
+    this.sockets.in(this.roomID).emit(eventName, data);
     this.addEventToHistory(eventName, data);
   }
 
@@ -314,7 +314,7 @@ function startListen(sockets) {
   const socketNamespace = sockets.of(namespace);
 
   socketNamespace.on('connection', socket => {
-    registerCreate(sockets, socket);
+    registerCreate(socketNamespace, socket);
     registerJoin(socket);
   });
 }

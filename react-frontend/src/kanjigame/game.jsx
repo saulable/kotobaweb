@@ -58,10 +58,8 @@ class Game extends Component {
   }
 
   addEventAsChatMessage(eventData) {
-    console.log('setting state');
     this.setState((previousState) => {
       previousState.chatMessages.push({ text: JSON.stringify(eventData) });
-      console.log(previousState);
       return previousState;
     });
   }
@@ -71,10 +69,6 @@ class Game extends Component {
 
     this.state.socket.on(socketEvents.Server.NO_SUCH_GAME, () => {
       window.$('#noSuchGameModal').modal();
-    });
-
-    this.state.socket.on('new question', () => {
-      console.log('new question');
     });
 
     this.state.socket.on(socketEvents.Server.CHAT, data => this.addEventAsChatMessage(data));
@@ -87,6 +81,8 @@ class Game extends Component {
     this.state.socket.on(socketEvents.Server.GAME_ENDED_ERROR, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.GAME_ENDED_MAINTENANCE, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.PLAYER_LEFT, data => this.addEventAsChatMessage(data));
+    this.state.socket.on(socketEvents.Server.PLAYER_JOINED, data => this.addEventAsChatMessage(data));
+    this.state.socket.on(socketEvents.Server.NEW_QUESTION, data => this.addEventAsChatMessage(data));
 
     this.state.socket.emit(socketEvents.Client.JOIN_GAME, query);
   }
