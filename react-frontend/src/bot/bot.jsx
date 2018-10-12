@@ -135,7 +135,7 @@ function render() {
     <div id="container-fluid">
       {createModals(commands)}
       <Header />
-      <SubmenuBar initialTabName="QUIZ MANUAL" contentForTabName={contentForTabName} />
+      <SubmenuBar initialTabName="COMMANDS" contentForTabName={contentForTabName} />
     </div>
   );
 }
