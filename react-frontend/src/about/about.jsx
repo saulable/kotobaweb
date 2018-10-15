@@ -43,11 +43,11 @@ function render() {
               <h1 className="card-title mt-3">Contact</h1>
               <div className="form-group">
                 <label className="bmd-label-floating" id="emailLabel" htmlFor="emailaddress">Email address</label>
-                <input type="email" className="form-control" id="emailaddress" />
+                <input type="email" className="form-control" id="emailaddress" required />
               </div>
               <div className="form-group">
                 <label className="bmd-label-floating" htmlFor="message" id="messageLabel">Message</label>
-                <textarea className="form-control" id="message" rows="5" />
+                <textarea minlength="10" className="form-control" id="message" rows="5" required />
               </div>
               <button type="submit" className="btn btn-primary active">Submit</button>
             </form>
