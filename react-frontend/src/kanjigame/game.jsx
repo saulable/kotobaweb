@@ -31,8 +31,8 @@ function NoSuchGameModal() {
   );
 }
 
-function ChatBox(props) {
-  return props.messages.map((message, index) => (
+function EventBox(props) {
+  return props.events.map((message, index) => (
     <div className="mb-1" key={index}>
       {message.text}
     </div>
@@ -44,7 +44,7 @@ class Game extends Component {
     super(props);
     this.state = {
       socket: socketIO(constants.SOCKET_SERVER_URI),
-      chatMessages: [],
+      events: [],
     };
   }
 
@@ -52,14 +52,14 @@ class Game extends Component {
     return (
       <div>
         <NoSuchGameModal />
-        <ChatBox messages={this.state.chatMessages} />
+        <EventBox events={this.state.events} />
       </div>
     );
   }
 
   addEventAsChatMessage(eventData) {
     this.setState((previousState) => {
-      previousState.chatMessages.push({ text: JSON.stringify(eventData) });
+      previousState.events.push({ text: JSON.stringify(eventData) });
       return previousState;
     });
   }

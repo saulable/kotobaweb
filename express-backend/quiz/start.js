@@ -180,7 +180,7 @@ class Room {
   }
 
   showQuestion(question) {
-    this.emitEventToAll(events.Server.NEW_QUESTION, { question });
+    this.emitEventToAll(events.Server.NEW_QUESTION, question);
   }
 
   notifySaveSuccessful() {
