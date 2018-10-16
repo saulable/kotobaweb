@@ -4,6 +4,7 @@ const app = express();
 const server = require('http').Server(app);
 const sockets = require('socket.io')(server);
 const kanjiGame = require('./quiz/start.js');
+const routes = require('./routes');
 
 server.listen(3002);
 
@@ -17,10 +18,7 @@ app.use(function(req, res, next) {
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-app.post('/contact', (req, res) => {
-  res.json({success: true});
-});
+app.use('/', routes);
 
 kanjiGame.startListen(sockets);
 
