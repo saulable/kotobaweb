@@ -17,7 +17,7 @@ routes.post('/', async (req, res) => {
     from: email,
     to: config.recipientAddress,
     subject: 'Message via kotobaweb.com',
-    html: message,
+    html: `From: ${email}:\n\n${message}`,
   };
 
   try {
