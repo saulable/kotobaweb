@@ -8,6 +8,7 @@ class About extends Component {
     this.state = {
       email: '',
       message: '',
+      sending: false,
     };
   }
 
@@ -19,7 +20,33 @@ class About extends Component {
 
   onSubmitForm = async e => {
     e.preventDefault();
-    const response = await axios.post('/contact', this.state);
+    this.setState({ sending: true });
+
+    try {
+      const response = await axios.post('/contact', this.state);
+      const { success, email } = response.data;
+      if (!success) {
+        this.setState({
+          errorMessage: `There was an error sending your message. You can contact me by email at ${email}`,
+          successMessage: '',
+        })
+      } else {
+        this.setState({
+          successMessage: 'I have received your message and will read it soon.',
+          errorMessage: '',
+        });
+
+        this.refs.messageField.value = '';
+        this.refs.emailField.value = '';
+      }
+    } catch (err) {
+      this.setState({
+        errorMessage: `An unknown error occurred while sending your message.`,
+        successMessage: '',
+      });
+    }
+
+    this.setState({ sending: false });
   }
 
   render() {
@@ -62,15 +89,25 @@ class About extends Component {
             <div className="card-body">
               <form onSubmit={this.onSubmitForm}>
                 <h1 className="card-title mt-3">Contact</h1>
+                { this.state.errorMessage && (
+                  <div class="alert alert-danger">
+                    { this.state.errorMessage }
+                  </div>
+                )}
+                { this.state.successMessage && (
+                  <div class="alert alert-success">
+                    { this.state.successMessage }
+                  </div>
+                )}
                 <div className="form-group">
                   <label className="bmd-label-floating" id="emailLabel" htmlFor="emailaddress">Email address</label>
-                  <input onChange={this.onFormValueChange} name="email" type="email" className="form-control" id="emailaddress" required />
+                  <input onChange={this.onFormValueChange} name="email" type="email" className="form-control" id="emailaddress" ref="emailField" required />
                 </div>
                 <div className="form-group">
                   <label className="bmd-label-floating" htmlFor="message" id="messageLabel">Message</label>
-                  <textarea onChange={this.onFormValueChange} name="message" minLength="10" className="form-control" id="message" rows="5" required />
+                  <textarea onChange={this.onFormValueChange} name="message" minLength="10" className="form-control" id="message" rows="5" ref="messageField" required />
                 </div>
-                <button type="submit" className="btn btn-primary active">Submit</button>
+                <button type="submit" className="btn btn-primary active" disabled={this.state.sending}>Submit</button>
               </form>
             </div>
           </div>
