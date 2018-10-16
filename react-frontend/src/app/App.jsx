@@ -8,7 +8,7 @@ import KanjiGameCreate from '../kanjigame/create';
 import KanjiGameRoom from '../kanjigame/game';
 
 function renderNotFound() {
-  return <p>Not Found</p>;
+  return <p className="mt-2 ml-2">That page was not found</p>;
 }
 
 function render() {
