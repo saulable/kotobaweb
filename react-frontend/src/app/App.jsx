@@ -18,7 +18,8 @@ function render() {
         <Nav />
         <Switch>
           <Route exact path="/about" component={About} />
-          <Route exact path="/bot" component={Bot} />
+          <Route exact path="/bot" render={() => <Bot subpageName="COMMANDS" />} />
+          <Route exact path="/bot/quiz" render={() => <Bot subpageName="QUIZ MANUAL" />} />
           <Route exact path="/strokeorder" component={StrokeOrder} />
           <Route exact path="/kanjigame/create" component={KanjiGameCreate} />
           <Route exact path="/kanjigame/game" component={KanjiGameRoom} />

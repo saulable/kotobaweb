@@ -130,12 +130,12 @@ const contentForTabName = {
   "QUIZ MANUAL": QuizManual,
 };
 
-function render() {
+function render(props) {
   return (
     <div id="container-fluid">
       {createModals(commands)}
       <Header />
-      <SubmenuBar initialTabName="COMMANDS" contentForTabName={contentForTabName} />
+      <SubmenuBar initialTabName={props.subpageName} contentForTabName={contentForTabName} />
     </div>
   );
 }
