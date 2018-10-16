@@ -18,6 +18,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.post('/contact', (req, res) => {
+  res.json({success: true});
+});
+
 kanjiGame.startListen(sockets);
 
 module.exports = app;
