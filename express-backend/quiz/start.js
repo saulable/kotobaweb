@@ -118,7 +118,8 @@ class Room {
     socket.leave(this.roomID);
     delete this.userInfoForUserID[socket.id];
     this.emitLatestScores();
-    this.closeIfEmpty();
+
+    setTimeout(() => this.closeIfEmpty(), 60000);
   }
 
   empty() {
@@ -127,7 +128,7 @@ class Room {
 
   closeIfEmpty() {
     if (this.empty()) {
-        quizManager.stopQuiz(this.roomID, undefined, true);
+      quizManager.stopQuiz(this.roomID, undefined, true);
     }
   }
 
