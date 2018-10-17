@@ -26,7 +26,7 @@ function render() {
             <NavLink exact activeClassName="active" className="nav-link" to="/strokeorder">Stroke Order</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink exact activeClassName="active" className="nav-link" to="/bot">Discord Bot</NavLink>
+            <NavLink activeClassName="active" className="nav-link" to="/bot">Discord Bot</NavLink>
           </li>
           <li className="nav-item">
             <NavLink exact activeClassName="active" className="nav-link" to="/about">About</NavLink>

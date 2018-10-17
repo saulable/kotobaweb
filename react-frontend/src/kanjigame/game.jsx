@@ -4,6 +4,7 @@ import constants from './constants.js';
 import socketEvents from '../common/socket_events.js';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
+import './game.css';
 
 function NoSuchGameModal() {
   return (
@@ -39,6 +40,30 @@ function EventBox(props) {
   ));
 }
 
+class AnswerArea extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      input: '',
+    };
+  }
+
+  render() {
+    return (
+      <div className="row">
+        <div className="col-sm-12">
+          <div className="card fixed-bottom" id="answerArea">
+            <h3 className="card-title mt-3">{this.props.instructions}</h3>
+            <div class="card-body">
+              Test
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -50,9 +75,10 @@ class Game extends Component {
 
   render() {
     return (
-      <div>
+      <div class="container">
         <NoSuchGameModal />
         <EventBox events={this.state.events} />
+        <AnswerArea />
       </div>
     );
   }

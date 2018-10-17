@@ -1,10 +1,8 @@
 import React from 'react';
 import './bot.css';
 import '../main.css';
-import Avatar from '../img/kotoba_avatar.png';
 import commands from './commands';
-import SubmenuBar from './../controls/submenu_bar.jsx';
-import manualSections from './manual_sections.jsx';
+import Header from './header.jsx';
 
 function modalIdForExample(example) {
   return `modal-${example.imageName}`;
@@ -76,66 +74,12 @@ function Commands() {
   );
 }
 
-function Header() {
-  return (
-    <div className="row pl-5 pt-5 pb-5 bg-light">
-      <div className="col-sm-12">
-        <img className="align-top" alt="bot avatar" id="avatar" src={Avatar} />
-        <div className="inline-block ml-4">
-          <h5 className="mb-2">Kotoba Discord Bot</h5>
-          <a href="https://discordbots.org/bot/251239170058616833"><img src="https://discordbots.org/api/widget/status/251239170058616833.svg" alt="Discord Bots" /></a>
-          &nbsp;
-          <a href="https://discordbots.org/bot/251239170058616833"><img src="https://discordbots.org/api/widget/servers/251239170058616833.svg" alt="Discord Bots" /></a>
-          <br />
-          <div className="mt-3">
-            <a href="https://discordapp.com/oauth2/authorize?client_id=251239170058616833&scope=bot" target="_blank">INVITE</a>
-            <a className="ml-4" href="https://github.com/mistval/kotoba" target="_blank">GITHUB</a>
-            <a className="ml-4" href="https://discord.gg/zkAKbyJ" target="_blank">HELP</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function QuizManual() {
-  return (
-    <div className="row p-5 mr-5">
-      <div className="col-lg-2 col-md-3 col-sm-12">
-        { manualSections.map(section => {
-          return (
-            <p className="toc-item text-muted" key={section.title}>
-              <a href={`#${section.title}`}>{ section.title }</a>
-            </p>
-          );
-        }) }
-      </div>
-      <div className="col-lg-10 col-md-9 col-sm-12">
-        { manualSections.map(section => {
-          const Instructions = section.content;
-          return (
-            <div className="mb-5" id={section.title} key={section.title}>
-              <h3>{ section.title }</h3>
-              <Instructions />
-            </div>
-          );
-        }) }
-      </div>
-    </div>
-  );
-}
-
-const contentForTabName = {
-  COMMANDS: Commands,
-  "QUIZ MANUAL": QuizManual,
-};
-
 function render(props) {
   return (
     <div id="container-fluid">
       {createModals(commands)}
       <Header />
-      <SubmenuBar initialTabName={props.subpageName} contentForTabName={contentForTabName} />
+      <Commands />
     </div>
   );
 }
