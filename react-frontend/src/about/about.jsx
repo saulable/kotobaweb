@@ -53,7 +53,7 @@ class About extends Component {
     return (
       <div className="container-fluid p-5">
         <div className="row">
-          <div className="col-lg-8">
+          <div className="col-lg-8 mb-5">
             <p>
               KotobaWeb is an extension of work I&#39;ve done for&nbsp;
               <NavLink exact activeClassName="active" to="/bot">my Discord Bot</NavLink>

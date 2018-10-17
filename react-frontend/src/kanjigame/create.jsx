@@ -48,7 +48,7 @@ function RenderForm({ formikArgs }) {
   return (
     <Form>
       <div className="row">
-        <div className="col-lg-4">
+        <div className="col-lg-4 mb-5">
           <div className="card">
             <div className="card-block-title">
               <h5 className="card-title">Select Categories</h5>
@@ -68,7 +68,7 @@ function RenderForm({ formikArgs }) {
             </div>
           }
         </div>
-        <div className="col-lg-4">
+        <div className="col-lg-4 mb-5">
           <div className="card">
             <div className="card-block-title">
               <h5 className="card-title">Configuration</h5>

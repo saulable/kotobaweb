@@ -7,7 +7,7 @@ import Header from './header.jsx';
 function QuizManual() {
   return (
     <div className="row pl-5 pr-5 mr-5">
-      <div className="col-lg-2 col-md-3 col-sm-12">
+      <div className="col-lg-2 col-md-3 col-sm-12 mb-5">
         { manualSections.map(section => {
           return (
             <p className="toc-item text-muted" key={section.title}>
