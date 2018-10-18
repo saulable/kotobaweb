@@ -104,7 +104,7 @@ class Room {
 
     socket.on(events.Client.CHAT, text => {
       this.emitEventFromSender(socket, events.Server.CHAT, { text, username });
-      quizManager.processUserInput(this.roomID, socket.id, username, msg);
+      quizManager.processUserInput(this.roomID, socket.id, username, text);
     });
 
     socket.on('disconnect', () => {
@@ -138,7 +138,10 @@ class Room {
     Object.keys(this.userInfoForUserID).forEach(userID => {
       const unqualifiedUserID = userID.replace(`${namespace}#`, '');
       const client = this.sockets.in(this.roomID).connected[unqualifiedUserID];
-      client.leave(this.roomID);
+
+      if (client) {
+        client.leave(this.roomID);
+      }
     });
 
     delete roomForRoomID[this.roomID];

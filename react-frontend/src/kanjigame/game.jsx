@@ -55,6 +55,16 @@ class AnswerArea extends Component {
     super(props);
   }
 
+  handleSubmit = ev => {
+    ev.preventDefault();
+    this.props.onSubmit(this.refs.answerInput.value);
+  }
+
+  handleSkip = ev => {
+    ev.preventDefault();
+    this.props.onSkip();
+  }
+
   render() {
     return (
       <div className="container fixed-bottom">
@@ -66,6 +76,22 @@ class AnswerArea extends Component {
                 <div height="150">
                   <img src={this.props.imageDataUri}></img>
                 </div>
+                <form className="mb-0">
+                  <div className="container-fluid">
+                    <div className="row">
+                      <div className="col-lg-9 col-md-8 pl-0">
+                        <div className="form-group mb-0">
+                          <label htmlFor="answerInput" className="bmd-label-floating">Answer</label>
+                          <input className="form-control" id="answerInput" ref="answerInput" />
+                        </div>
+                      </div>
+                      <div className="col-lg-3 col-md-4 pt-4">
+                        <button type="submit" className="btn btn-primary active mr-2" onClick={this.handleSubmit}>Send</button>
+                        <button type="submit" className="btn btn-primary active" onClick={this.handleSkip}>Skip</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -96,6 +122,14 @@ class Game extends Component {
     });
   };
 
+  onSubmit = answer => {
+    this.state.socket.emit(socketEvents.Client.CHAT, answer);
+  }
+
+  onSkip = () => {
+    this.state.socket.emit(socketEvents.Client.SKIP);
+  }
+
   render() {
     return (
       <div>
@@ -103,7 +137,7 @@ class Game extends Component {
           <NoSuchGameModal />
           <EventBox events={this.state.events} />
         </div>
-        <AnswerArea {...this.state.currentQuestionData} />
+        <AnswerArea {...this.state.currentQuestionData} onSubmit={this.onSubmit} onSkip={this.onSkip} />
       </div>
     );
   }
