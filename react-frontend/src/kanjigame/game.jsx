@@ -140,7 +140,7 @@ class AnswerArea extends Component {
               <div className="card-body">
                 <h3 className="card-title">{this.props.instructions}</h3>
                 <div height="150">
-                  <img src={this.props.imageDataUri}></img>
+                  <img src={this.props.imageDataUri} height="110"></img>
                 </div>
                 <form className="mb-0">
                   <div className="container-fluid">
