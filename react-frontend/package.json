@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "bootstrap-material-design-icons": "^2.2.0",
     "formik": "^1.3.0",
+    "install": "^0.12.2",
+    "npm": "^6.4.1",
     "query-string": "^6.1.0",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",

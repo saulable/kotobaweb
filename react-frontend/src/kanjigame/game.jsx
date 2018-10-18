@@ -4,6 +4,7 @@ import constants from './constants.js';
 import socketEvents from '../common/socket_events.js';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
+import 'bootstrap-material-design-icons/css/material-icons.css';
 import './game.css';
 
 const EventType = {
@@ -55,6 +56,8 @@ function getEventSpecificJsx(ev) {
   if (eventType === EventType.CORRECT_ANSWER) {
     return (
       <div>
+        <i class="material-icons correct-icon">check_circle</i>
+        {' '}
         <a target="_blank" href={`https://jisho.org/search/${encodeURIComponent(eventData.question)}`}>{eventData.question}</a>
         <br />
         <span>Correct answers: {eventData.answers.join(', ')}</span>
@@ -67,6 +70,8 @@ function getEventSpecificJsx(ev) {
   } else if (eventType === EventType.NO_ANSWER) {
     return (
       <div>
+        <i class="material-icons incorrect-icon">close</i>
+        {' '}
         <a target="_blank" href={`https://jisho.org/search/${encodeURIComponent(eventData.question)}`}>{eventData.question}</a>
         <br />
         <span>Correct answers: {eventData.answers.join(', ')}</span>

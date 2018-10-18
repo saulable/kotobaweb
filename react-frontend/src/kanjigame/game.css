@@ -9,4 +9,13 @@
 #eventBoxContainer {
   overflow-y: scroll;
   max-height: 100%;
+  min-height: 100%;
+}
+
+.correct-icon {
+  color: green;
+}
+
+.incorrect-icon {
+  color: red;
 }
