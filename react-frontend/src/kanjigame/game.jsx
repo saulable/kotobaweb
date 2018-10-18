@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import socketIO from 'socket.io-client';
 import constants from './constants.js';
 import socketEvents from '../common/socket_events.js';
@@ -9,6 +9,7 @@ import './game.css';
 const EventType = {
   CORRECT_ANSWER: 'correct answer',
   NO_ANSWER: 'incorrect answer',
+  CHAT: 'chat',
 };
 
 function arrayBufferToBase64(buffer) {
@@ -73,38 +74,55 @@ function getEventSpecificJsx(ev) {
         <span>Meaning: {eventData.meaning}</span>
       </div>
     );
+  } else if (eventType === EventType.CHAT) {
+    return (
+      <div>
+        <span>{eventData.username}</span>
+        <br />
+        <span>{eventData.text}</span>
+      </div>
+    );
   } else {
     return <div></div>
   }
 }
 
-function EventBox(props) {
-  return (
-    <div id="eventBox">
-      <div className="container" id="eventBoxContainer">
-        { props.events.map((ev, index) => (
-          <div className="row">
-            <div className="col-sm-12" key={index}>
-              {getEventSpecificJsx(ev)}
-              <hr />
+class EventBox extends Component {
+  componentDidUpdate() {
+    this.refs.eventBoxContainer.scrollTop = this.refs.eventBoxContainer.scrollHeight;
+  }
+
+  render() {
+    const props = this.props;
+    return (
+      <div id="eventBox">
+        <div className="container" id="eventBoxContainer" ref="eventBoxContainer">
+          { props.events.map((ev, index) => (
+            <div className="row">
+              <div className="col-sm-12" key={index}>
+                {getEventSpecificJsx(ev)}
+                <hr />
+              </div>
             </div>
-          </div>
-          ))
-        }
+            ))
+          }
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 class AnswerArea extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleSubmit = ev => {
     ev.preventDefault();
-    this.props.onSubmit(this.refs.answerInput.value);
-    this.refs.answerInput.value = '';
+
+    const input = this.refs.answerInput.value;
+    if (!input) {
+      this.props.onSkip();
+    } else {
+      this.props.onSubmit(input);
+      this.refs.answerInput.value = '';
+    }
   }
 
   handleSkip = ev => {
@@ -179,6 +197,17 @@ class Game extends Component {
 
   onSubmit = answer => {
     this.state.socket.emit(socketEvents.Client.CHAT, answer);
+    this.setState(previousState => {
+      previousState.events.push({
+        eventType: EventType.CHAT,
+        eventData: {
+          username: queryString.parse(this.props.location.search).username,
+          text: answer,
+        }
+      });
+
+      return previousState;
+    });
   }
 
   onSkip = () => {
@@ -211,7 +240,7 @@ class Game extends Component {
       window.$('#noSuchGameModal').modal();
     });
 
-    this.state.socket.on(socketEvents.Server.CHAT, data => this.addEventAsChatMessage(data));
+    this.state.socket.on(socketEvents.Server.CHAT, data => this.handleEventBoxEvent(EventType.CHAT, data));
     this.state.socket.on(socketEvents.Server.PLAYER_LEFT, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.SCORE_UPDATE, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.UNANSWERED, data => this.handleEventBoxEvent(EventType.NO_ANSWER, data));
