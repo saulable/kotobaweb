@@ -6,6 +6,11 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import './game.css';
 
+const EventType = {
+  CORRECT_ANSWER: 'correct answer',
+  NO_ANSWER: 'incorrect answer',
+};
+
 function arrayBufferToBase64(buffer) {
   var binary = '';
   const bytes = new Uint8Array(buffer);
@@ -42,12 +47,53 @@ function NoSuchGameModal() {
   );
 }
 
+function getEventSpecificJsx(ev) {
+  const eventType = ev.eventType;
+  const eventData = ev.eventData;
+
+  if (eventType === EventType.CORRECT_ANSWER) {
+    return (
+      <div>
+        <a target="_blank" href={`https://jisho.org/search/${encodeURIComponent(eventData.question)}`}>{eventData.question}</a>
+        <br />
+        <span>Correct answers: {eventData.answers.join(', ')}</span>
+        <br />
+        <span>Answerers: {eventData.answerers.join(', ')}</span>
+        <br />
+        <span>Meaning: {eventData.meaning}</span>
+      </div>
+    );
+  } else if (eventType === EventType.NO_ANSWER) {
+    return (
+      <div>
+        <a target="_blank" href={`https://jisho.org/search/${encodeURIComponent(eventData.question)}`}>{eventData.question}</a>
+        <br />
+        <span>Correct answers: {eventData.answers.join(', ')}</span>
+        <br />
+        <span>Meaning: {eventData.meaning}</span>
+      </div>
+    );
+  } else {
+    return <div></div>
+  }
+}
+
 function EventBox(props) {
-  return props.events.map((message, index) => (
-    <div className="mb-1" key={index}>
-      {message.text}
+  return (
+    <div id="eventBox">
+      <div className="container" id="eventBoxContainer">
+        { props.events.map((ev, index) => (
+          <div className="row">
+            <div className="col-sm-12" key={index}>
+              {getEventSpecificJsx(ev)}
+              <hr />
+            </div>
+          </div>
+          ))
+        }
+      </div>
     </div>
-  ));
+  );
 }
 
 class AnswerArea extends Component {
@@ -58,10 +104,12 @@ class AnswerArea extends Component {
   handleSubmit = ev => {
     ev.preventDefault();
     this.props.onSubmit(this.refs.answerInput.value);
+    this.refs.answerInput.value = '';
   }
 
   handleSkip = ev => {
     ev.preventDefault();
+    this.refs.answerInput.value = '';
     this.props.onSkip();
   }
 
@@ -122,6 +170,13 @@ class Game extends Component {
     });
   };
 
+  handleEventBoxEvent = (eventType, eventData) => {
+    this.setState((previousState) => {
+      previousState.events.push({ eventType, eventData });
+      return previousState;
+    });
+  }
+
   onSubmit = answer => {
     this.state.socket.emit(socketEvents.Client.CHAT, answer);
   }
@@ -135,8 +190,8 @@ class Game extends Component {
       <div>
         <div className="container">
           <NoSuchGameModal />
-          <EventBox events={this.state.events} />
         </div>
+        <EventBox events={this.state.events} />
         <AnswerArea {...this.state.currentQuestionData} onSubmit={this.onSubmit} onSkip={this.onSkip} />
       </div>
     );
@@ -159,8 +214,8 @@ class Game extends Component {
     this.state.socket.on(socketEvents.Server.CHAT, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.PLAYER_LEFT, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.SCORE_UPDATE, data => this.addEventAsChatMessage(data));
-    this.state.socket.on(socketEvents.Server.UNANSWERED, data => this.addEventAsChatMessage(data));
-    this.state.socket.on(socketEvents.Server.ANSWERED, data => this.addEventAsChatMessage(data));
+    this.state.socket.on(socketEvents.Server.UNANSWERED, data => this.handleEventBoxEvent(EventType.NO_ANSWER, data));
+    this.state.socket.on(socketEvents.Server.ANSWERED, data => this.handleEventBoxEvent(EventType.CORRECT_ANSWER, data));
     this.state.socket.on(socketEvents.Server.GAME_ENDED_NO_USERS, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.GAME_ENDED_TOO_MANY_UNANSWERED_QUESTIONS, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.GAME_ENDED_ERROR, data => this.addEventAsChatMessage(data));
