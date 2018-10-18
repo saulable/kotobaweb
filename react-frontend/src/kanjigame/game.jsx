@@ -6,6 +6,16 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import './game.css';
 
+function arrayBufferToBase64(buffer) {
+  var binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[ i ]);
+  }
+  return window.btoa(binary);
+}
+
 function NoSuchGameModal() {
   return (
     <div>
@@ -43,19 +53,20 @@ function EventBox(props) {
 class AnswerArea extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      input: '',
-    };
   }
 
   render() {
     return (
-      <div className="row">
-        <div className="col-sm-12">
-          <div className="card fixed-bottom" id="answerArea">
-            <h3 className="card-title mt-3">{this.props.instructions}</h3>
-            <div class="card-body">
-              Test
+      <div className="container fixed-bottom">
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="card mb-3" id="answerArea">
+              <div className="card-body">
+                <h3 className="card-title">{this.props.instructions}</h3>
+                <div height="150">
+                  <img src={this.props.imageDataUri}></img>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -70,15 +81,29 @@ class Game extends Component {
     this.state = {
       socket: socketIO(constants.SOCKET_SERVER_URI),
       events: [],
+      currentQuestionData: {
+        instructions: 'Next Question',
+      },
     };
   }
 
+  handleNewQuestion = questionData => {
+    this.setState({
+      currentQuestionData: {
+        instructions: questionData.instructions,
+        imageDataUri: 'data:image/png;base64,' + arrayBufferToBase64(questionData.bodyAsPngBuffer),
+      },
+    });
+  };
+
   render() {
     return (
-      <div class="container">
-        <NoSuchGameModal />
-        <EventBox events={this.state.events} />
-        <AnswerArea />
+      <div>
+        <div className="container">
+          <NoSuchGameModal />
+          <EventBox events={this.state.events} />
+        </div>
+        <AnswerArea {...this.state.currentQuestionData} />
       </div>
     );
   }
@@ -108,7 +133,7 @@ class Game extends Component {
     this.state.socket.on(socketEvents.Server.GAME_ENDED_MAINTENANCE, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.PLAYER_LEFT, data => this.addEventAsChatMessage(data));
     this.state.socket.on(socketEvents.Server.PLAYER_JOINED, data => this.addEventAsChatMessage(data));
-    this.state.socket.on(socketEvents.Server.NEW_QUESTION, data => this.addEventAsChatMessage(data));
+    this.state.socket.on(socketEvents.Server.NEW_QUESTION, data => this.handleNewQuestion(data));
 
     this.state.socket.emit(socketEvents.Client.JOIN_GAME, query);
   }
