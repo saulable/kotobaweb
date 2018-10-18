@@ -1,0 +1,60 @@
+version: '3.2'
+services:
+  traefik:
+    image: traefik
+    networks:
+      - web
+    ports:
+      - '80:80'
+      - '8080:8080'
+    command:
+      - "--docker"
+      - "--docker.domain=docker.localhost"
+      - "--docker.watch"
+      - "--logLevel=DEBUG"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.dev.toml:/traefik.toml
+    depends_on:
+      - express
+      - react
+  express:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./express-backend
+    image: express-backend
+    networks:
+      - web
+    volumes:
+      - /app/node_modules
+      - ./express-backend:/app
+    ports:
+      - '3002'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.backend=api"
+      - "traefik.port=3002"
+      - "traefik.frontend.rule=Host:localhost"
+      - "traefik.frontend.passHostHeader=true"
+  react:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./react-frontend
+    image:  react-frontend
+    networks:
+      - web
+    volumes:
+      - /app/node_modules
+      - ./react-frontend:/app
+    ports:
+      - '3001'
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=3001"
+      - "traefik.backend=client"
+      - "traefik.frontend.rule=Host:localhost"
+networks:
+  web:
+    external: true
