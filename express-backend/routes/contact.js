@@ -1,5 +1,5 @@
 const routes = require('express').Router();
-const config = require('./../config.js').mail;
+const config = require('../config.js').mail;
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({

@@ -124,11 +124,12 @@ async function build() {
   }
 
   const deckDataString = JSON.stringify(deckDataForDeckName, null, 2);
-  await writeFile(path.join(__dirname, '..', 'generated', 'quiz', 'decks.json'), deckDataString);
+  await writeFile(path.join(__dirname, '../', 'generated', 'quiz', 'decks.json'), deckDataString);
 }
 
 if (require.main === module) {
   build().then(() => {
+		console.log('saved to ' + path.join(__dirname, '../', 'generated', 'quiz', 'decks.json'));
     console.log('done');
     process.exit(0);
   }).catch((err) => {

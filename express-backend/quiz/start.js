@@ -1,13 +1,16 @@
+const socketIo = require('socket.io');
+const assert = require('assert');
 const quizManager = require('./common/manager.js');
 const Session = require('./common/session.js');
 const DeckCollection = require('./common/deck_collection.js');
+
 const DeckLoader = require('./common/deck_loader.js');
 const normalGameMode = require('./common/normal_mode.js');
-const socketIo = require('socket.io');
-const errors = require('./../../src_common/socket_errors.js');
-const events = require('./../../src_common/socket_events.js');
-const namespace = require('./../../src_common/socket_namespaces.js').KANJI_GAME;
-const assert = require('assert');
+
+const errors = require('../src_common/socket_errors.js');
+const events = require('../src_common/socket_events.js');
+const namespace = require('../src_common/socket_namespaces.js').KANJI_GAME;
+
 
 const MAX_EVENT_HISTORY_LENGTH = 50;
 const roomForRoomID = {};

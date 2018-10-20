@@ -1,6 +1,6 @@
 debug = false
 
-defaultEntryPoints = ["https","http"]
+defaultEntryPoints = ["http"]
 
 [entryPoints]
   [entryPoints.http]
