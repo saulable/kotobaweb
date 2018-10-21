@@ -33,6 +33,7 @@ services:
       - "traefik.enable=true"
       - "traefik.port=3001"
       - "traefik.backend=client"
+      - "traefik.priority=10"
       - "traefik.frontend.rule=Host:localhost"
       - "traefik.frontend.passHostHeader=true"
   express:
@@ -54,6 +55,7 @@ services:
       - "traefik.docker.network=web"
       - "traefik.backend=api"
       - "traefik.port=3002"
+      - "traefik.priority=5"
       - "traefik.frontend.rule=Host:localhost"
 
 networks:
